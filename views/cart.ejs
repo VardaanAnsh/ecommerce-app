@@ -1,0 +1,136 @@
+<%- include('./partials/header') %>
+<div class="w-full h-screen flex items-start px-10 py-10 gap-8">
+    <div class="w-[40%] flex flex-col gap-6 overflow-hidden inline-block pb-10">
+        <% user.cart.forEach((item, index) => { %>
+            <div class="w-full rounded-md overflow-hidden border border-gray-300 shadow-sm">
+                <div class="w-full h-64 flex justify-center items-center bg-[<%= item.bgcolor %>]">
+                    <img class="h-48 object-contain" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="<%= item.name %>">
+                </div>
+                <div class="w-full bg-[<%= item.panelcolor %>] flex justify-between px-5 py-4 items-center">
+                    <h3 class="text-2xl text-[<%= item.textcolor %>]"><%= item.name %></h3>
+                    <div class="flex items-center gap-2">
+                        <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line cursor-pointer increment"
+                           data-id="<%= index %>" data-price="<%= item.price %>" data-discount="<%= item.discount %>"></i>
+                        <div id="quantity-<%= index %>" class="px-2 py-1 rounded-md bg-white text-black">1</div>
+                        <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line cursor-pointer decrement"
+                           data-id="<%= index %>" data-price="<%= item.price %>" data-discount="<%= item.discount %>"></i>
+                    </div>
+                </div>
+                <div class="flex items-center bg-[<%= item.panelcolor %>] justify-between px-5 py-3">
+                    <h4 class="text-lg">Net Total</h4>
+                    <h2 id="net-total-<%= index %>" class="text-lg font-semibold">₹ <%= item.price + 20 - item.discount %> </h2>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="w-[60%] bg-white px-8 py-6 rounded-lg shadow-md">
+        <h3 class="text-2xl mb-4 font-semibold">Price Breakdown</h3>
+        <div id="price-breakdown" class="mt-4">
+            <% user.cart.forEach((item, index) => { %>
+                <div id="breakdown-item-<%= index %>">
+                    <div class="flex justify-between mt-2">
+                        <h4 class="w-1/2">Total MRP for <%= item.name %> (×<span id="breakdown-quantity-<%= index %>">1</span>)</h4>
+                        <h4 id="breakdown-price-<%= index %>">₹ <%= item.price %></h4>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <h4 class="w-1/2">Discount on <%= item.name %></h4>
+                        <h4>₹ <%= item.discount %></h4>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <h4 class="w-1/2">Platform Fee for <%= item.name %></h4>
+                        <h4>₹ 20</h4>
+                    </div>
+                    <div class="flex justify-between mt-2 border-b pb-2">
+                        <h4 class="w-1/2">Shipping Fee for <%= item.name %></h4>
+                        <h4>FREE</h4>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="w-full h-[1px] bg-gray-400 mt-6"></div>
+
+        <div class="flex justify-between items-center mt-5">
+            <h3 class="text-2xl font-bold text-gray-800">Total Amount</h3>
+            <h3 id="total-amount" class="text-2xl font-semibold text-green-600">₹ <%= user.cart.reduce((total, item) => total + (item.price + 20 - item.discount), 0) %></h3>
+        </div>
+
+        <button class="w-full mt-6 bg-blue-600 text-white py-3 rounded-md text-lg font-semibold">Proceed to Checkout</button>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>
+
+<script>
+    // Increment Button
+    document.querySelectorAll('.increment').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const price = parseInt(button.getAttribute('data-price')) || 0;
+            const discount = parseInt(button.getAttribute('data-discount')) || 0;
+            const quantityElement = document.getElementById(`quantity-${id}`);
+            const netTotalElement = document.getElementById(`net-total-${id}`);
+            const breakdownQuantity = document.getElementById(`breakdown-quantity-${id}`);
+            const breakdownPrice = document.getElementById(`breakdown-price-${id}`);
+
+            // Increment the quantity
+            let quantity = parseInt(quantityElement.textContent) || 1;
+            quantity += 1;
+            quantityElement.textContent = quantity;
+            breakdownQuantity.textContent = quantity;
+
+            // Calculate the new net total for this item
+            const itemTotal = (price * quantity) - discount + 20;  // Platform fee added only once
+            netTotalElement.textContent = `₹ ${itemTotal}`;
+            breakdownPrice.textContent = `₹ ${price * quantity}`;
+
+            // Update the overall total amount
+            updateTotalAmount();
+        });
+    });
+
+    // Decrement Button
+    document.querySelectorAll('.decrement').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.getAttribute('data-id');
+            const price = parseInt(button.getAttribute('data-price')) || 0;
+            const discount = parseInt(button.getAttribute('data-discount')) || 0;
+            const quantityElement = document.getElementById(`quantity-${id}`);
+            const netTotalElement = document.getElementById(`net-total-${id}`);
+            const breakdownQuantity = document.getElementById(`breakdown-quantity-${id}`);
+            const breakdownPrice = document.getElementById(`breakdown-price-${id}`);
+
+            // Decrement the quantity only if it's greater than 1
+            let quantity = parseInt(quantityElement.textContent) || 1;
+            if (quantity > 1) {
+                quantity -= 1;
+                quantityElement.textContent = quantity;
+                breakdownQuantity.textContent = quantity;
+
+                // Calculate the new net total for this item (adding platform fee only once)
+                const itemTotal = (price * quantity) - discount + 20;  // Platform fee added once per item
+                netTotalElement.textContent = `₹ ${itemTotal}`;
+                breakdownPrice.textContent = `₹ ${price * quantity}`;
+            }
+
+            // Update the overall total amount
+            updateTotalAmount();
+        });
+    });
+
+    // Function to update the total amount dynamically
+    function updateTotalAmount() {
+        let totalAmount = 0;
+        document.querySelectorAll('.increment').forEach(button => {
+            const id = button.getAttribute('data-id');
+            const price = parseInt(button.getAttribute('data-price')) || 0;
+            const discount = parseInt(button.getAttribute('data-discount')) || 0;
+            const quantity = parseInt(document.getElementById(`quantity-${id}`).textContent) || 1;
+
+            // Calculate the total for each item with platform fee added once
+            totalAmount += (price * quantity) - discount + 20;  // Platform fee added once per item
+        });
+        document.getElementById('total-amount').textContent = `₹ ${totalAmount}`;
+    }
+</script>
