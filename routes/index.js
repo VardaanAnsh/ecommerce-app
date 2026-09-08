@@ -211,8 +211,6 @@ router.post('/checkout', isLoggedIn, async function(req, res) {
             });
         }
 
-        console.log('ADDRESS ID FROM FRONTEND:', req.body.addressId);
-        console.log('USER ADDRESSES:', user.addresses);
         const address = user.addresses.id(req.body.addressId);
 
         if (!address) {
@@ -231,8 +229,8 @@ router.post('/checkout', isLoggedIn, async function(req, res) {
 
         const totalAmount = user.cart.reduce((total, item) => {
             return total +
-                (item.product.price * item.quantity)
-                - item.product.discount
+                (item.product.price - item.product.discount)
+                * item.quantity
                 + 20;
         }, 0);
 
@@ -311,7 +309,7 @@ router.get('/checkout', isLoggedIn, async function(req,res){
     }, 0);
 
     const discount = user.cart.reduce((total, item) => {
-      return total + item.product.discount;
+      return total + (item.product.discount*item.quantity);
     }, 0);
 
     const platformFee = user.cart.length * 20;
