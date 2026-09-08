@@ -32,6 +32,26 @@ router.get('/cart', isLoggedIn, async function(req, res) {
             .findById(req.user._id)
             .populate('cart.product');
 
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const hasUnavailableProducts = user.cart.some(
+            item => !item.product
+        );
+
+        if (hasUnavailableProducts) {
+            user.cart = user.cart.filter(item => item.product);
+            await user.save();
+
+            req.flash(
+                'error',
+                'Some products in your cart are no longer available and were removed.'
+            );
+
+            return res.redirect('/cart');
+        }
+
         res.render('cart', { user });
 
     } catch (error) {
@@ -209,6 +229,26 @@ router.post('/checkout', isLoggedIn, async function(req, res) {
             return res.status(400).json({
                 message: 'Cart is empty'
             });
+        }
+        const unavailableProduct = user.cart.find(item => !item.product);
+
+        if (unavailableProduct) {
+            return res.status(400).json({
+                message: 'One or more products in your cart are no longer available. Please review your cart.'
+            });
+        }
+        const invalidQuantity = user.cart.find(
+            item => !Number.isInteger(item.quantity) || item.quantity < 1
+        );
+
+        if (invalidQuantity) {
+            return res.status(400).json({
+                message: 'Invalid product quantity in cart.'
+            });
+        }
+        
+        if (!mongoose.Types.ObjectId.isValid(req.body.addressId)) {
+            return res.status(400).json({ message: 'Invalid address ID' });
         }
 
         const address = user.addresses.id(req.body.addressId);

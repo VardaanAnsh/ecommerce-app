@@ -194,6 +194,7 @@
 
                         <button
                             id="place-order-btn"
+                            type="button"
                             class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
 
                             Place Order
@@ -220,7 +221,6 @@
     if (placeOrderButton) {
 
         placeOrderButton.addEventListener('click', async function() {
-
             const selectedAddress = document.querySelector(
                 'input[name="addressId"]:checked'
             );
@@ -229,6 +229,10 @@
                 alert('Please select a delivery address');
                 return;
             }
+
+            const placeOrderButton = this;
+            placeOrderButton.disabled = true;
+            placeOrderButton.innerText = 'Placing Order...';
 
             // console.log('SELECTED ADDRESS:', selectedAddress);
             // console.log('SELECTED ADDRESS VALUE:', selectedAddress.value);
@@ -256,6 +260,8 @@
             } catch (error) {
 
                 console.error(error);
+                placeOrderButton.disabled = false;
+                placeOrderButton.innerText = 'Place Order';
                 alert(error.message);
 
             }
