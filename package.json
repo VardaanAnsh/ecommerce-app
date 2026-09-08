@@ -1,5 +1,5 @@
 {
-  "name": "mern-major-project--1",
+  "name": "ecommerce-app",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -8,7 +8,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Mern-Major Project1",
+  "description": "E-commerce web application built with Node.js, Express.js, MongoDB and EJS",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "config": "^3.3.12",
