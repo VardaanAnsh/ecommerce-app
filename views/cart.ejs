@@ -3,46 +3,55 @@
     <div class="w-[40%] flex flex-col gap-6 overflow-hidden inline-block pb-10">
         <% user.cart.forEach((item, index) => { %>
             <div class="w-full rounded-md overflow-hidden border border-gray-300 shadow-sm">
-                <div class="w-full h-64 flex justify-center items-center bg-[<%= item.bgcolor %>]">
-                    <img class="h-48 object-contain" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="<%= item.name %>">
+                <div class="w-full h-64 flex justify-center items-center bg-[<%= item.product.bgcolor %>]">
+                    <img class="h-48 object-contain" src="data:image/jpeg;base64,<%= item.product.image.toString('base64') %>" alt="<%= item.product.name %>">
                 </div>
-                <div class="w-full bg-[<%= item.panelcolor %>] flex justify-between px-5 py-4 items-center">
-                    <h3 class="text-2xl text-[<%= item.textcolor %>]"><%= item.name %></h3>
+                <div class="w-full bg-[<%= item.product.panelcolor %>] flex justify-between px-5 py-4 items-center">
+                    <h3 class="text-2xl text-[<%= item.product.textcolor %>]"><%= item.product.name %></h3>
                     <div class="flex items-center gap-2">
                         <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line cursor-pointer increment"
-                           data-id="<%= index %>" data-price="<%= item.price %>" data-discount="<%= item.discount %>"></i>
-                        <div id="quantity-<%= index %>" class="px-2 py-1 rounded-md bg-white text-black">1</div>
+                            data-id="<%= index %>"
+                            data-product-id="<%= item.product._id %>"
+                            data-price="<%= item.product.price %>"
+                            data-discount="<%= item.product.discount %>"></i>
+                        <div id="quantity-<%= index %>" class="px-2 py-1 rounded-md bg-white text-black"><%= item.quantity %></div>
                         <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line cursor-pointer decrement"
-                           data-id="<%= index %>" data-price="<%= item.price %>" data-discount="<%= item.discount %>"></i>
+                            data-id="<%= index %>"
+                            data-product-id="<%= item.product._id %>"
+                            data-price="<%= item.product.price %>"
+                            data-discount="<%= item.product.discount %>"></i>
+                        <i class="w-7 h-7 bg-white flex text-red flex rounded-full items-center justify-center ri-delete-bin-line cursor-pointer remove-item"
+                            data-product-id="<%= item.product._id %>"></i>
                     </div>
                 </div>
-                <div class="flex items-center bg-[<%= item.panelcolor %>] justify-between px-5 py-3">
+                <div class="flex items-center bg-[<%= item.product.panelcolor %>] justify-between px-5 py-3">
                     <h4 class="text-lg">Net Total</h4>
-                    <h2 id="net-total-<%= index %>" class="text-lg font-semibold">₹ <%= item.price + 20 - item.discount %> </h2>
+                    <h2 id="net-total-<%= index %>" class="text-lg font-semibold">₹ <%= (item.product.price - item.product.discount) * item.quantity  %></h2>
                 </div>
             </div>
         <% }); %>
     </div>
-
     <div class="w-[60%] bg-white px-8 py-6 rounded-lg shadow-md">
         <h3 class="text-2xl mb-4 font-semibold">Price Breakdown</h3>
         <div id="price-breakdown" class="mt-4">
             <% user.cart.forEach((item, index) => { %>
                 <div id="breakdown-item-<%= index %>">
                     <div class="flex justify-between mt-2">
-                        <h4 class="w-1/2">Total MRP for <%= item.name %> (×<span id="breakdown-quantity-<%= index %>">1</span>)</h4>
-                        <h4 id="breakdown-price-<%= index %>">₹ <%= item.price %></h4>
+                        <h4 class="w-1/2">Total MRP for <%= item.product.name %> (×
+                            <span id="breakdown-quantity-<%= index %>"><%= item.quantity %></span>
+                            )</h4>
+                        <h4 id="breakdown-price-<%= index %>">₹ <%= item.product.price * item.quantity %></h4>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <h4 class="w-1/2">Discount on <%= item.name %></h4>
-                        <h4>₹ <%= item.discount %></h4>
+                        <h4 class="w-1/2">Discount on <%= item.product.name %></h4>
+                        <h4 id="breakdown-discount-<%= index %>">₹ <%= item.product.discount * item.quantity %></h4>
                     </div>
                     <div class="flex justify-between mt-2">
-                        <h4 class="w-1/2">Platform Fee for <%= item.name %></h4>
+                        <h4 class="w-1/2">Platform Fee for <%= item.product.name %></h4>
                         <h4>₹ 20</h4>
                     </div>
                     <div class="flex justify-between mt-2 border-b pb-2">
-                        <h4 class="w-1/2">Shipping Fee for <%= item.name %></h4>
+                        <h4 class="w-1/2">Shipping Fee for <%= item.product.name %></h4>
                         <h4>FREE</h4>
                     </div>
                 </div>
@@ -53,26 +62,51 @@
 
         <div class="flex justify-between items-center mt-5">
             <h3 class="text-2xl font-bold text-gray-800">Total Amount</h3>
-            <h3 id="total-amount" class="text-2xl font-semibold text-green-600">₹ <%= user.cart.reduce((total, item) => total + (item.price + 20 - item.discount), 0) %></h3>
+            <h3 id="total-amount" class="text-2xl font-semibold text-green-600">
+                ₹ <%= user.cart.reduce((total, item) => total + ((item.product.price-item.product.discount)*item.quantity + 20), 0) %></h3>
         </div>
 
-        <button class="w-full mt-6 bg-blue-600 text-white py-3 rounded-md text-lg font-semibold">Proceed to Checkout</button>
+        <button
+            id="checkout-btn"
+            class="w-full mt-6 bg-blue-600 text-white py-3 rounded-md text-lg font-semibold">
+            Proceed to Checkout
+        </button>
+
     </div>
 </div>
 
 <%- include('./partials/footer') %>
 
 <script>
+    async function saveQuantity(productId, quantity) {
+            const response = await fetch(`/cart/${productId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    quantity: quantity
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update quantity');
+            }
+
+            return response.json();
+    }
     // Increment Button
     document.querySelectorAll('.increment').forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
             const id = button.getAttribute('data-id');
+            const productId = button.getAttribute('data-product-id');
             const price = parseInt(button.getAttribute('data-price')) || 0;
             const discount = parseInt(button.getAttribute('data-discount')) || 0;
             const quantityElement = document.getElementById(`quantity-${id}`);
             const netTotalElement = document.getElementById(`net-total-${id}`);
             const breakdownQuantity = document.getElementById(`breakdown-quantity-${id}`);
             const breakdownPrice = document.getElementById(`breakdown-price-${id}`);
+            const breakdownDiscount = document.getElementById(`breakdown-discount-${id}`);
 
             // Increment the quantity
             let quantity = parseInt(quantityElement.textContent) || 1;
@@ -80,10 +114,18 @@
             quantityElement.textContent = quantity;
             breakdownQuantity.textContent = quantity;
 
+            //api call for updating quantity in our database 
+            try {
+                await saveQuantity(productId, quantity);
+            } catch (error) {
+                console.error(error);
+            }
+
             // Calculate the new net total for this item
-            const itemTotal = (price * quantity) - discount + 20;  // Platform fee added only once
+            const itemTotal = (price -discount) * quantity ;  // Platform fee added only once
             netTotalElement.textContent = `₹ ${itemTotal}`;
-            breakdownPrice.textContent = `₹ ${price * quantity}`;
+            breakdownPrice.textContent = `₹ ${price * quantity}`
+            breakdownDiscount.textContent = `₹ ${discount * quantity}`;
 
             // Update the overall total amount
             updateTotalAmount();
@@ -92,14 +134,16 @@
 
     // Decrement Button
     document.querySelectorAll('.decrement').forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
             const id = button.getAttribute('data-id');
+            const productId = button.getAttribute('data-product-id');
             const price = parseInt(button.getAttribute('data-price')) || 0;
             const discount = parseInt(button.getAttribute('data-discount')) || 0;
             const quantityElement = document.getElementById(`quantity-${id}`);
             const netTotalElement = document.getElementById(`net-total-${id}`);
             const breakdownQuantity = document.getElementById(`breakdown-quantity-${id}`);
             const breakdownPrice = document.getElementById(`breakdown-price-${id}`);
+            const breakdownDiscount = document.getElementById(`breakdown-discount-${id}`);
 
             // Decrement the quantity only if it's greater than 1
             let quantity = parseInt(quantityElement.textContent) || 1;
@@ -109,14 +153,43 @@
                 breakdownQuantity.textContent = quantity;
 
                 // Calculate the new net total for this item (adding platform fee only once)
-                const itemTotal = (price * quantity) - discount + 20;  // Platform fee added once per item
+                const itemTotal = (price - discount) * quantity  ;  // Platform fee added once per item
                 netTotalElement.textContent = `₹ ${itemTotal}`;
-                breakdownPrice.textContent = `₹ ${price * quantity}`;
+                breakdownPrice.textContent = `₹ ${price * quantity}`
+                breakdownDiscount.textContent = `₹ ${discount * quantity}`;
+
+                try {
+                    await saveQuantity(productId, quantity);
+                } catch (error) {
+                    console.error(error);
+                }
             }
 
             // Update the overall total amount
             updateTotalAmount();
         });
+    });
+
+    document.querySelectorAll('.remove-item').forEach(button => {
+    button.addEventListener('click', async () => {
+
+        const productId = button.getAttribute('data-product-id');
+
+        try {
+            const response = await fetch(`/cart/${productId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to remove item');
+            }
+
+            window.location.reload();
+
+        } catch (error) {
+            console.error(error);
+        }
+    });
     });
 
     // Function to update the total amount dynamically
@@ -129,8 +202,13 @@
             const quantity = parseInt(document.getElementById(`quantity-${id}`).textContent) || 1;
 
             // Calculate the total for each item with platform fee added once
-            totalAmount += (price * quantity) - discount + 20;  // Platform fee added once per item
+            totalAmount += (price - discount ) * quantity + 20;  // Platform fee added once per item
         });
         document.getElementById('total-amount').textContent = `₹ ${totalAmount}`;
     }
+
+   document.getElementById('checkout-btn').addEventListener('click', () => {
+            window.location.href = '/checkout';
+    });
+    
 </script>

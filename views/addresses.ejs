@@ -1,0 +1,384 @@
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen bg-gray-50 px-6 md:px-12 lg:px-20 py-12">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+
+            <div>
+                <h1 class="text-4xl font-semibold text-gray-900">
+                    My Addresses
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Manage your delivery addresses
+                </p>
+            </div>
+
+            <a href="/account"
+               class="text-blue-600 hover:underline">
+                ← Back to Account
+            </a>
+
+        </div>
+
+
+        <!-- Add Address -->
+
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
+
+            <h2 class="text-xl font-semibold text-gray-900">
+                Add a New Address
+            </h2>
+
+            <p class="text-gray-500 text-sm mt-1">
+                Add an address for your future orders
+            </p>
+
+            <form action="/addresses" method="POST" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <!-- Label -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Address Type
+                    </label>
+
+                    <select name="label"
+                            required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+
+                        <option value="">Select type</option>
+                        <option value="Home">Home</option>
+                        <option value="Office">Office</option>
+                        <option value="Other">Other</option>
+
+                    </select>
+                </div>
+
+
+                <!-- Name -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        required
+                        placeholder="Enter recipient name"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+                </div>
+
+
+                <!-- Phone -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        required
+                        placeholder="10-digit mobile number"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+                </div>
+
+
+                <!-- Pincode -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Pincode
+                    </label>
+
+                    <input
+                        type="text"
+                        name="pincode"
+                        required
+                        placeholder="6-digit pincode"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+                </div>
+
+
+                <!-- Address -->
+
+                <div class="md:col-span-2">
+
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Address
+                    </label>
+
+                    <textarea
+                        name="addressLine"
+                        required
+                        rows="3"
+                        placeholder="House number, street, locality"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500"></textarea>
+
+                </div>
+
+
+                <!-- City -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="city"
+                        required
+                        placeholder="Enter city"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+                </div>
+
+
+                <!-- State -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        State
+                    </label>
+
+                    <input
+                        type="text"
+                        name="state"
+                        required
+                        placeholder="Enter state"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500">
+                </div>
+
+
+                <!-- Default Address -->
+
+                <div class="md:col-span-2 flex items-center gap-3">
+
+                    <input
+                        type="checkbox"
+                        name="isDefault"
+                        value="true"
+                        class="w-4 h-4">
+
+                    <label class="text-sm text-gray-700">
+                        Make this my default address
+                    </label>
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <div class="md:col-span-2">
+
+                    <button
+                        type="submit"
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+
+                        Add Address
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- Saved Addresses -->
+
+        <div>
+
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+                Saved Addresses
+            </h2>
+
+
+            <% if (user.addresses.length === 0) { %>
+
+                <div class="bg-white border border-gray-200 rounded-xl p-8 text-center">
+
+                    <p class="text-gray-500">
+                        You don't have any saved addresses yet.
+                    </p>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                    <% user.addresses.forEach(address => { %>
+
+                        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+
+                            <div class="flex items-center justify-between">
+
+                                <div class="flex items-center gap-3">
+
+                                    <h3 class="text-lg font-semibold text-gray-900">
+                                        <%= address.label %>
+                                    </h3>
+
+                                    <% if (address.isDefault) { %>
+
+                                        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                            Default
+                                        </span>
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="mt-4 text-gray-600 text-sm leading-6">
+
+                                <p class="font-medium text-gray-900">
+                                    <%= address.name %>
+                                </p>
+
+                                <p>
+                                    <%= address.addressLine %>
+                                </p>
+
+                                <p>
+                                    <%= address.city %>,
+                                    <%= address.state %> -
+                                    <%= address.pincode %>
+                                </p>
+
+                                <p>
+                                    Phone: <%= address.phone %>
+                                </p>
+
+                            </div>
+
+
+                            <div class="flex gap-4 mt-5">
+
+                                <% if (!address.isDefault) { %>
+
+                                        <button
+                                            class="text-blue-600 text-sm hover:underline set-default"
+                                            data-address-id="<%= address._id %>">
+                                            Set as Default
+                                        </button>
+
+                                    <% } %>
+
+                                    <a
+                                        href="/addresses/<%= address._id %>/edit"
+                                        class="text-blue-600 text-sm hover:underline">
+                                        Edit
+                                    </a>
+                                        <button
+                                        class="text-red-600 text-sm hover:underline delete-address"
+                                        data-address-id="<%= address._id %>">
+                                        Delete
+                                    </button>
+
+                            </div>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.querySelectorAll('.delete-address').forEach(button => {
+
+        button.addEventListener('click', async function() {
+
+            const addressId = button.getAttribute('data-address-id');
+
+            const confirmed = confirm(
+                'Are you sure you want to delete this address?'
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+
+                const response = await fetch(`/addresses/${addressId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to delete address');
+                }
+
+                window.location.reload();
+
+            } catch (error) {
+
+                console.error(error);
+                alert(error.message);
+
+            }
+
+        });
+
+    });
+
+    document.querySelectorAll('.set-default').forEach(button => {
+
+        button.addEventListener('click', async function() {
+
+            const addressId = button.getAttribute('data-address-id');
+
+            try {
+
+                const response = await fetch(
+                    `/addresses/${addressId}/default`,
+                    {
+                        method: 'PATCH'
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || 'Failed to set default address'
+                    );
+                }
+
+                window.location.reload();
+
+            } catch (error) {
+
+                console.error(error);
+                alert(error.message);
+
+            }
+
+        });
+
+    });
+</script>
+
+<%- include('./partials/footer') %>

@@ -10,6 +10,7 @@ const flash = require('connect-flash');
 const ownersRouter = require("./routes/ownersRouter");
 const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
+const addressesRouter = require('./routes/addressesRouter');
 const indexpage = require("./routes/index");
 
 // MongoDB connection
@@ -27,6 +28,7 @@ app.use(
     secret: process.env.EXPRESS_SESSION_SECRET, // ✅ USE THE ACTUAL ENV VARIABLE
     resave: false,
     saveUninitialized: false,
+    
   })
 );
 
@@ -47,8 +49,9 @@ app.use('/', indexpage);
 app.use('/owners', ownersRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.use('/addresses', addressesRouter);
 
 // Start server
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+app.listen(5000, () => {
+  console.log("Server running on http://localhost:5000");
 });

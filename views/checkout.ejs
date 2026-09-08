@@ -1,0 +1,270 @@
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen bg-gray-50 px-6 md:px-12 lg:px-20 py-12">
+
+    <div class="max-w-6xl mx-auto">
+
+        <div class="mb-8">
+            <h1 class="text-4xl font-semibold text-gray-900">
+                Checkout
+            </h1>
+
+            <p class="text-gray-500 mt-2">
+                Choose your delivery address
+            </p>
+        </div>
+
+
+        <% if (user.addresses.length === 0) { %>
+
+            <div class="bg-white border border-gray-200 rounded-xl p-8 text-center">
+
+                <h2 class="text-xl font-semibold text-gray-900">
+                    No delivery address found
+                </h2>
+
+                <p class="text-gray-500 mt-2">
+                    Add an address before placing your order.
+                </p>
+
+                <a
+                    href="/addresses"
+                    class="inline-block mt-5 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                    Add Address
+                </a>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Addresses -->
+
+                <div class="lg:col-span-2">
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+
+                        <h2 class="text-2xl font-semibold text-gray-900">
+                            Delivery Address
+                        </h2>
+
+                        <div class="mt-6 flex flex-col gap-4">
+
+                            <% user.addresses.forEach(address => { %>
+
+                                <label
+                                    class="border border-gray-200 rounded-lg p-5 cursor-pointer hover:border-blue-500 transition">
+
+                                    <div class="flex gap-4">
+
+                                        <input
+                                            type="radio"
+                                            name="addressId"
+                                            value="<%= address._id %>"
+                                            <%= address.isDefault ? 'checked' : '' %>
+                                            class="mt-1">
+
+                                        <div>
+
+                                            <div class="flex items-center gap-3">
+
+                                                <h3 class="font-semibold text-gray-900">
+                                                    <%= address.label %>
+                                                </h3>
+
+                                                <% if (address.isDefault) { %>
+
+                                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                                        Default
+                                                    </span>
+
+                                                <% } %>
+
+                                            </div>
+
+                                            <p class="font-medium text-gray-900 mt-3">
+                                                <%= address.name %>
+                                            </p>
+
+                                            <p class="text-gray-600 text-sm mt-1">
+                                                <%= address.addressLine %>
+                                            </p>
+
+                                            <p class="text-gray-600 text-sm">
+                                                <%= address.city %>,
+                                                <%= address.state %> -
+                                                <%= address.pincode %>
+                                            </p>
+
+                                            <p class="text-gray-600 text-sm mt-1">
+                                                Phone: <%= address.phone %>
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </label>
+
+                            <% }) %>
+
+                        </div>
+
+
+                        <a
+                            href="/addresses"
+                            class="inline-block mt-5 text-blue-600 text-sm hover:underline">
+                            + Manage Addresses
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Order Summary -->
+
+                <div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+
+                        <h2 class="text-xl font-semibold text-gray-900">
+                            Order Summary
+                        </h2>
+                        <div class="mt-5 space-y-4 text-gray-600">
+
+                    <div class="flex justify-between">
+                        <span>
+                            Items
+                        </span>
+                        <span>
+                            <%= totalItems %>
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>
+                            Subtotal
+                        </span>
+                        <span>
+                            ₹<%= subtotal %>
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>
+                            Discount
+                        </span>
+                        <span class="text-green-600">
+                            - ₹<%= discount %>
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>
+                            Platform Fee
+                        </span>
+                        <span>
+                            ₹<%= platformFee %>
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>
+                            Shipping
+                        </span>
+                        <span class="text-green-600">
+                            FREE
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="border-t border-gray-200 mt-5 pt-5 flex justify-between">
+                    <span class="font-semibold text-gray-900">
+                        Total
+                    </span>
+
+                    <span class="font-semibold text-gray-900">
+                        ₹<%= totalAmount %>
+                    </span>
+                </div>
+
+
+                        <button
+                            id="place-order-btn"
+                            class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+
+                            Place Order
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const placeOrderButton = document.getElementById('place-order-btn');
+
+    if (placeOrderButton) {
+
+        placeOrderButton.addEventListener('click', async function() {
+
+            const selectedAddress = document.querySelector(
+                'input[name="addressId"]:checked'
+            );
+
+            if (!selectedAddress) {
+                alert('Please select a delivery address');
+                return;
+            }
+
+            // console.log('SELECTED ADDRESS:', selectedAddress);
+            // console.log('SELECTED ADDRESS VALUE:', selectedAddress.value);
+            try {
+
+                const response = await fetch('/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        addressId: selectedAddress.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || 'Checkout failed'
+                    );
+                }
+                window.location.href = `/order-success?orderId=${data.orderId}`;
+
+            } catch (error) {
+
+                console.error(error);
+                alert(error.message);
+
+            }
+
+        });
+
+    }
+
+</script>
+
+
+<%- include('./partials/footer') %>

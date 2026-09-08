@@ -2,6 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 const ownerModel= require('../models/owners-model');
+const isLoggedIn = require('../middlewares/isLoggedIn');
+const isOwner = require('../middlewares/isOwner');
 
 router.get('/', function(req, res){
     res.send('Welcome to the Sketchers Owners API using routers.');
@@ -10,7 +12,7 @@ router.get('/', function(req, res){
 
 
 if(process.env.NODE_ENV ==='development'){
-  router.post('/create', async function (req, res) {
+  router.post('/create',  async function (req, res) {
     try {
         // Fetch all existing owners
         let owners = await ownerModel.find();
@@ -70,7 +72,7 @@ if(process.env.NODE_ENV ==='development'){
     
 };
 
-router.get('/admin', function(req, res){
+router.get('/admin', isLoggedIn , isOwner, function(req, res){
   let success = req.flash('success');
   res.render('createproducts',{success});
 });

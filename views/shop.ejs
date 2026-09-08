@@ -46,9 +46,16 @@
                                 <h4>₹ <%= product.price %>
                                 </h4>
                             </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
+                            <!-- <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
                                 <i class="ri-add-line"></i>
-                            </a>
+                            </a> -->
+                            <form action="/cart/<%= product._id %>" method="POST">
+                                <button
+                                    type="submit"
+                                    class="w-7 h-7 flex items-center justify-center rounded-full bg-white">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                     <% }) %>
