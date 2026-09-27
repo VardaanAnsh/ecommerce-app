@@ -8,11 +8,16 @@ services:
       MONGODB_URI: ${MONGODB_URI}
       EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
       JWT_KEY: ${JWT_KEY}
+    volumes:
+      - .:/app
+      - /app/node_modules
     depends_on:
       - mongo
 
   mongo:
     image: mongo:7
+    ports:
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 
