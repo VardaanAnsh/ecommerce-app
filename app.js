@@ -44,6 +44,30 @@ app.use((req, res, next) => {
 // Set EJS view engine
 app.set('view engine', 'ejs');
 
+const INSTANCE = process.env.APP_INSTANCE || 'unknown';
+
+// let requestCount = 0;
+
+// app.use((req, res, next) => {
+//     requestCount++;
+//     res.setHeader('X-App-Instance', INSTANCE);
+//     next();
+// });
+
+// app.get('/stats', (req, res) => {
+//     res.json({
+//         instance: INSTANCE,
+//         requestsHandled: requestCount
+//     });
+// });
+
+// app.get('/instance', (req, res) => {
+//     res.json({
+//         instance: INSTANCE,
+//         message: `Handled by ${INSTANCE}`
+//     });
+// });
+
 // Route mounts
 app.use('/', indexpage);
 app.use('/owners', ownersRouter);
@@ -56,5 +80,5 @@ const PORT = process.env.PORT || 5000;
 
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server ${INSTANCE} running on port ${PORT}`);
 });
