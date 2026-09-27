@@ -1,34 +1,17 @@
-// const mongoose = require('mongoose');
-// const dbgr = require('debug')("development:mongoose");
-
-// mongoose
-// .connect('mongodb://127.0.0.1:27017/sketchers')
-// .then(function(){
-//     dbgr('Connected to MongoDB');
-// })
-// .catch(function (err)   {
-//         console.log(err);
-        
-// });
-
-// module.exports = mongoose.connection;
-
 const mongoose = require('mongoose');
-const config = require('config');
 const dbgr = require('debug')('development:mongoose');
 
-dbgr('Mongoose connection file loaded');
+const mongoURI =
+    process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/scatch';
 
 mongoose
-.connect(`${config.get('MONGODB_URI')}/scatch`)
-
-.then(function(){
-    dbgr('Connected to MongoDB');
-})
-.catch(function (err)   {
-    dbgr('Error connecting to MongoDB:', err);
-    console.log(err);
-});
+    .connect(mongoURI)
+    .then(function () {
+        dbgr('Connected to MongoDB');
+        console.log('Connected to MongoDB');
+    })
+    .catch(function (err) {
+        console.log('Error connecting to MongoDB:', err);
+    });
 
 module.exports = mongoose.connection;
-
