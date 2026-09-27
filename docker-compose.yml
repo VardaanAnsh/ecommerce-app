@@ -1,0 +1,20 @@
+services:
+
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
+      JWT_KEY: ${JWT_KEY}
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
