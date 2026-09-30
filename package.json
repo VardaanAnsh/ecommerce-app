@@ -13,16 +13,18 @@
     "bcrypt": "^5.1.1",
     "config": "^3.3.12",
     "connect-flash": "^0.1.1",
+    "connect-redis": "^10.0.0",
     "cookie-parser": "^1.4.7",
     "debug": "^4.3.7",
     "dotenv": "^16.6.1",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "express-session": "^1.18.1",
+    "express-session": "^1.19.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "redis": "^6.2.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

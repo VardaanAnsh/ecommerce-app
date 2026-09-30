@@ -12,6 +12,7 @@ services:
       - /app/node_modules
     depends_on:
       - mongo
+      - redis
 
   app2:
     build: .
@@ -25,6 +26,7 @@ services:
       - /app/node_modules
     depends_on:
       - mongo
+      - redis
 
   app3:
     build: .
@@ -38,6 +40,7 @@ services:
       - /app/node_modules
     depends_on:
       - mongo
+      - redis
 
   mongo:
     image: mongo:7
@@ -56,6 +59,9 @@ services:
       - app1
       - app2
       - app3
+  
+  redis:
+    image: redis:7-alpine
 
 volumes:
   mongo_data:

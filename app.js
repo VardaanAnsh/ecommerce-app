@@ -5,6 +5,30 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const expressSession = require('express-session');
 const flash = require('connect-flash');
+const { createClient } = require('redis');
+const { RedisStore } = require('connect-redis');
+
+const redisClient = createClient({
+    url: 'redis://redis:6379'
+});
+
+redisClient.on('error', (err) => {
+    console.log('Redis Client Error', err);
+});
+
+redisClient.connect()
+    .then(() => {
+        console.log('Connected to Redis');
+    })
+    .catch((err) => {
+        console.error('Could not connect to Redis', err);
+        process.exit(1);
+});
+
+const redisStore = new RedisStore({
+    client: redisClient,
+    prefix: 'ecommerce:'
+});
 
 // Routers
 const ownersRouter = require("./routes/ownersRouter");
@@ -24,21 +48,36 @@ app.use(cookieParser());
 
 // Session and flash setup
 app.use(
-  expressSession({
-    secret: process.env.EXPRESS_SESSION_SECRET, // ✅ USE THE ACTUAL ENV VARIABLE
-    resave: false,
-    saveUninitialized: false,
-    
-  })
+    expressSession({
+        store: redisStore,
+        secret: process.env.EXPRESS_SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+    })
 );
 
 app.use(flash());
 
 // Make flash messages available to all views
 app.use((req, res, next) => {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
-  next();
+  
+    // if (req.path.startsWith('/cart') || req.path === '/shop') {
+    // console.log(
+    //     `${req.method} ${req.path} | ${INSTANCE} | session: ${req.sessionID}`
+    // );
+    // }
+
+    // const success = req.flash('success');
+
+    // console.log(
+    //     `FLASH CHECK - ${INSTANCE}:`,
+    //     success
+    // );
+
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+
+    next();
 });
 
 // Set EJS view engine

@@ -17,8 +17,9 @@ router.get('/', function(req, res){
 router.get('/shop',isLoggedIn, async (req, res) => {
   try {
     const products = await productModel.find({});  // fetch all products
-    const success = req.flash('success');    // example flash message
-    res.render('shop', { products, success });
+    // console.log("SHOP SESSION:", req.sessionID);
+    // console.log("SHOP FLASH:", req.flash('success'));
+    res.render('shop', { products });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -62,8 +63,8 @@ router.get('/cart', isLoggedIn, async function(req, res) {
 
 router.get('/users/shop',isLoggedIn, async function(req, res){
     let products = await productModel.find();
-    let success = req.flash('success');
-    res.render('shop',{products,success}) ;
+    const success = req.flash('success');
+    res.render('shop', { products, success });
 });
 
 
@@ -131,7 +132,8 @@ router.post('/cart/:productId', isLoggedIn, async function(req, res) {
         }
 
         await user.save();
-
+        // console.log("ADDING FLASH MESSAGE");
+        // console.log("ADDING FLASH MESSAGE - session:", req.sessionID);
         req.flash('success', 'Product added to Cart');
         res.redirect('/shop');
 
