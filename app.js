@@ -5,25 +5,8 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const expressSession = require('express-session');
 const flash = require('connect-flash');
-const { createClient } = require('redis');
 const { RedisStore } = require('connect-redis');
-
-const redisClient = createClient({
-    url: 'redis://redis:6379'
-});
-
-redisClient.on('error', (err) => {
-    console.log('Redis Client Error', err);
-});
-
-redisClient.connect()
-    .then(() => {
-        console.log('Connected to Redis');
-    })
-    .catch((err) => {
-        console.error('Could not connect to Redis', err);
-        process.exit(1);
-});
+const redisClient = require('./config/redis');
 
 const redisStore = new RedisStore({
     client: redisClient,

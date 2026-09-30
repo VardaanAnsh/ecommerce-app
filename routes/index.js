@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+const redisClient = require('../config/redis');
 const isLoggedIn = require('../middlewares/isLoggedIn');
 const productModel = require('../models/product-model');
 const userModel = require('../models/user-model');
@@ -14,16 +15,58 @@ router.get('/', function(req, res){
     res.render('index', { error, loginSuccess, loginError, loggedin: false });
 });
 
-router.get('/shop',isLoggedIn, async (req, res) => {
-  try {
-    const products = await productModel.find({});  // fetch all products
-    // console.log("SHOP SESSION:", req.sessionID);
-    // console.log("SHOP FLASH:", req.flash('success'));
-    res.render('shop', { products });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
+// router.get('/shop',isLoggedIn, async (req, res) => {
+//   try {
+//     const products = await productModel.find({});  // fetch all products
+//     // console.log("SHOP SESSION:", req.sessionID);
+//     // console.log("SHOP FLASH:", req.flash('success'));
+//     res.render('shop', { products });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Server Error');
+//   }
+// });
+
+//CACHING OF PRODUCTS IN REDIS
+router.get('/shop', isLoggedIn, async (req, res) => {
+    console.log('SHOP ROUTE HIT');
+
+    try {
+        const cacheKey = 'products:all';
+
+        const cachedProducts = await redisClient.get(cacheKey);
+
+        if (cachedProducts) {
+            console.log('CACHE HIT');
+
+            const products = JSON.parse(cachedProducts);
+
+            return res.render('shop', { products });
+        }
+
+        console.log('CACHE MISS');
+
+        const products = await productModel.find({}).lean();
+
+        const productsForCache = products.map(product => ({
+            ...product,
+            imageBase64: product.image
+                ? product.image.toString('base64')
+                : ''
+        }));
+
+        await redisClient.setEx(
+            cacheKey,
+            60,
+            JSON.stringify(productsForCache)
+        );
+
+        res.render('shop', { products: productsForCache });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
 
 
