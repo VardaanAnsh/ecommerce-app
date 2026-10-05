@@ -1,55 +1,2258 @@
 <%- include('./partials/header') %>
 
-<% if(success.length>0){ %>
-    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
-        <span class="inline-block mt-1 mb-1 text-white">
-            <%= success %>
-        </span>
-    </div>
-    <% } %>
+<div class="min-h-screen bg-gray-50">
 
-            <div class="min-h-screen flex flex-col">
-                <div class="container px-10 py-20 flex flex-grow">
-                    <div class="w-[25%] flex h-screen flex-col items-start">
-                        <div class="flex flex-col">
-                            <a class="block w-fit mb-2" href="">All Products</a>
-                            <a class="block w-fit mb-2" href="">Create new product</a>
-                        </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- =====================================================
+                 SIDEBAR
+            ====================================================== -->
+
+            <aside class="w-full lg:w-64 shrink-0">
+
+                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+
+                    <div class="px-3 py-3 mb-3">
+
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                            Admin Panel
+                        </p>
+
+                        <h2 class="text-lg font-semibold text-gray-900 mt-1">
+                            Product Management
+                        </h2>
+
                     </div>
-                    <main class="w-3/4 bg-white p-8 shadow ml-4">
-                        <h2 class="text-xl font-bold mb-4">Create New Product</h2>
-                        <form autocomplete="off" action="/products/create" method="post" enctype="multipart/form-data">
-                            <div class="mb-6">
-                                <h3 class="text-lg font-semibold mb-2">Product Details</h3>
-                                <div class="mb-4">
-                                    <label class="block mb-2 font-medium">Product Image</label>
-                                    <input name="image" type="file" class="py-2 px-4 rounded" value="Select File">
+
+
+                    <nav class="space-y-1">
+
+                        <a
+                            href="/shop"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition"
+                        >
+
+                            <i class="ri-store-2-line text-lg"></i>
+
+                            <span class="text-sm font-medium">
+                                View Store
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="/owners/admin"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-gray-100 text-gray-900"
+                        >
+
+                            <i class="ri-add-circle-line text-lg"></i>
+
+                            <span class="text-sm font-medium">
+                                Create Product
+                            </span>
+
+                        </a>
+
+                    </nav>
+
+                </div>
+
+            </aside>
+
+
+            <!-- =====================================================
+                 MAIN CONTENT
+            ====================================================== -->
+
+            <main class="flex-1 min-w-0">
+
+
+                <!-- =================================================
+                     PAGE HEADING
+                ================================================== -->
+
+                <div class="mb-8">
+
+                    <p class="text-sm text-gray-500 mb-1">
+                        Product Management
+                    </p>
+
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                        Create New Product
+                    </h1>
+
+                    <p class="text-sm text-gray-500 mt-2">
+                        Add a new product to your Cartinger store.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     FORM CARD
+                ================================================== -->
+
+                <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
+
+                    <div class="p-6 sm:p-8">
+
+
+                        <!-- =================================================
+                             VALIDATION ERROR
+                        ================================================== -->
+
+                        <% if (validationError) { %>
+
+                            <div
+                                id="validation-error"
+                                class="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3"
+                            >
+
+                                <i class="ri-error-warning-line text-red-500 text-lg mt-0.5"></i>
+
+                                <div class="text-sm text-red-600">
+
+                                    <p>
+                                        <%= validationError %>
+                                    </p>
+
                                 </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input name="name" type="text" placeholder="Product Name"
-                                        class="border p-2 rounded w-full">
-                                    <input name="price" type="text" placeholder="Product Price"
-                                        class="border p-2 rounded w-full">
-                                    <input name="discount" type="text" placeholder="Discount Price"
-                                        class="border p-2 rounded w-full">
-                                </div>
+
                             </div>
 
-                            <div>
-                                <h3 class="text-lg font-semibold mb-2">Panel Details</h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input name="bgcolor" type="text" placeholder="Background Color"
-                                        class="border p-2 rounded w-full">
-                                    <input name="panelcolor" type="text" placeholder="Panel Color"
-                                        class="border p-2 rounded w-full">
-                                    <input name="textcolor" type="text" placeholder="Text Color"
-                                        class="border p-2 rounded w-full">
+                        <% } %>
+
+
+                        <!-- =================================================
+                             FORM
+                        ================================================== -->
+
+                        <form
+                            autocomplete="off"
+                            action="/products/create"
+                            method="post"
+                            enctype="multipart/form-data"
+                        >
+
+
+                            <!-- =================================================
+                                 PRODUCT IMAGE
+                            ================================================== -->
+
+                            <section class="mb-8">
+
+                                <div class="mb-5">
+
+                                    <h2 class="text-lg font-semibold text-gray-900">
+                                        Product Image
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Upload a clear image of the product.
+                                    </p>
+
                                 </div>
+
+
+                                <label
+                                    for="product-image"
+                                    class="block cursor-pointer"
+                                >
+
+                                    <div
+                                        id="image-upload-box"
+                                        class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 hover:bg-gray-50 transition"
+                                    >
+
+
+                                        <!-- Upload Placeholder -->
+
+                                        <div id="upload-placeholder">
+
+                                            <div
+                                                class="mx-auto w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-4"
+                                            >
+
+                                                <i
+                                                    class="ri-image-add-line text-2xl text-gray-500"
+                                                ></i>
+
+                                            </div>
+
+
+                                            <p class="text-sm font-medium text-gray-900">
+                                                Choose product image
+                                            </p>
+
+
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                Click here to browse your files
+                                            </p>
+
+
+                                            <p
+                                                id="file-name"
+                                                class="text-xs text-gray-400 mt-3"
+                                            >
+                                                No file selected
+                                            </p>
+
+                                        </div>
+
+
+                                        <!-- Image Preview -->
+
+                                        <div
+                                            id="image-preview-container"
+                                            class="hidden"
+                                        >
+
+                                            <img
+                                                id="image-preview"
+                                                src=""
+                                                alt="Product preview"
+                                                class="mx-auto max-h-72 max-w-full rounded-lg object-contain"
+                                            >
+
+
+                                            <p
+                                                id="preview-file-name"
+                                                class="text-xs text-gray-500 mt-4"
+                                            >
+                                            </p>
+
+
+                                            <p class="text-xs text-gray-400 mt-1">
+                                                Click to choose a different image
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </label>
+
+
+                                <input
+                                    id="product-image"
+                                    name="image"
+                                    type="file"
+                                    accept="image/*"
+                                    class="hidden"
+                                >
+
+                            </section>
+
+
+                            <!-- Divider -->
+
+                            <div class="border-t border-gray-100 mb-8"></div>
+
+
+                            <!-- =================================================
+                                 PRODUCT DETAILS
+                            ================================================== -->
+
+                            <section class="mb-8">
+
+                                <div class="mb-5">
+
+                                    <h2 class="text-lg font-semibold text-gray-900">
+                                        Product Details
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Enter the basic information for your product.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+
+                                    <!-- Product Name -->
+
+                                    <div class="md:col-span-2">
+
+                                        <label
+                                            for="product-name"
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                        >
+                                            Product Name
+                                        </label>
+
+
+                                        <input
+                                            id="product-name"
+                                            name="name"
+                                            type="text"
+                                            placeholder="e.g. Black Leather Handbag"
+                                            value="<%= formData && formData.name ? formData.name : '' %>"
+                                            class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
+                                        >
+
+                                    </div>
+
+
+                                    <!-- Price -->
+
+                                    <div>
+
+                                        <label
+                                            for="product-price"
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                        >
+                                            Price
+                                        </label>
+
+
+                                        <div class="relative">
+
+                                            <span
+                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"
+                                            >
+                                                ₹
+                                            </span>
+
+
+                                            <input
+                                                id="product-price"
+                                                name="price"
+                                                type="number"
+                                                min="0"
+                                                placeholder="1200"
+                                                value="<%= formData && formData.price ? formData.price : '' %>"
+                                                class="w-full rounded-lg border border-gray-300 pl-8 pr-4 py-3 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
+                                            >
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Discount -->
+
+                                    <div>
+
+                                        <label
+                                            for="product-discount"
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                        >
+                                            Discount
+                                        </label>
+
+
+                                        <div class="relative">
+
+                                            <span
+                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"
+                                            >
+                                                ₹
+                                            </span>
+
+
+                                            <input
+                                                id="product-discount"
+                                                name="discount"
+                                                type="number"
+                                                min="0"
+                                                placeholder="100"
+                                                value="<%= formData && formData.discount ? formData.discount : '' %>"
+                                                class="w-full rounded-lg border border-gray-300 pl-8 pr-4 py-3 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
+                                            >
+
+                                        </div>
+
+
+                                        <p class="text-xs text-gray-400 mt-2">
+                                            Amount discounted from the original price.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+
+                            <!-- Divider -->
+
+                            <div class="border-t border-gray-100 mb-8"></div>
+
+
+                            <!-- =================================================
+                                 PRODUCT APPEARANCE
+                            ================================================== -->
+
+                            <section class="mb-8">
+
+                                <div class="mb-5">
+
+                                    <h2 class="text-lg font-semibold text-gray-900">
+                                        Product Appearance
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        These colors control how the product card appears in the store.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+
+                                    <!-- Background Color -->
+
+                                    <div>
+
+                                        <label
+                                            for="background-color"
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                        >
+                                            Background Color
+                                        </label>
+
+
+                                        <div class="flex items-center gap-3">
+
+                                            <input
+                                                id="background-color-picker"
+                                                type="color"
+                                                value="<%= formData && formData.bgcolor ? formData.bgcolor : '#f5f5f5' %>"
+                                                class="w-12 h-11 rounded-lg border border-gray-300 cursor-pointer p-1 bg-white"
+                                            >
+
+
+                                            <input
+                                                id="background-color"
+                                                name="bgcolor"
+                                                type="text"
+                                                value="<%= formData && formData.bgcolor ? formData.bgcolor : '#f5f5f5' %>"
+                                                class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
+                                            >
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Panel Color -->
+
+                                    <div>
+
+                                        <label
+                                            for="panel-color"
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                        >
+                                            Panel Color
+                                        </label>
+
+
+                                        <div class="flex items-center gap-3">
+
+                                            <input
+                                                id="panel-color-picker"
+                                                type="color"
+                                                value="<%= formData && formData.panelcolor ? formData.panelcolor : '#ffffff' %>"
+                                                class="w-12 h-11 rounded-lg border border-gray-300 cursor-pointer p-1 bg-white"
+                                            >
+
+
+                                            <input
+                                                id="panel-color"
+                                                name="panelcolor"
+                                                type="text"
+                                                value="<%= formData && formData.panelcolor ? formData.panelcolor : '#ffffff' %>"
+                                                class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
+                                            >
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Text Color -->
+
+                                    <div>
+
+                                        <label
+                                            for="text-color"
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                        >
+                                            Text Color
+                                        </label>
+
+
+                                        <div class="flex items-center gap-3">
+
+                                            <input
+                                                id="text-color-picker"
+                                                type="color"
+                                                value="<%= formData && formData.textcolor ? formData.textcolor : '#111827' %>"
+                                                class="w-12 h-11 rounded-lg border border-gray-300 cursor-pointer p-1 bg-white"
+                                            >
+
+
+                                            <input
+                                                id="text-color"
+                                                name="textcolor"
+                                                type="text"
+                                                value="<%= formData && formData.textcolor ? formData.textcolor : '#111827' %>"
+                                                class="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
+                                            >
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- =================================================
+                                     PRODUCT CARD PREVIEW
+                                ================================================== -->
+
+                                <div class="mt-6">
+
+                                    <p class="text-xs font-medium text-gray-500 mb-2">
+                                        Card Preview
+                                    </p>
+
+
+                                    <div class="max-w-sm">
+
+                                        <div
+                                            id="product-card-preview"
+                                            class="overflow-hidden rounded-xl border border-gray-200 shadow-sm"
+                                        >
+
+
+                                            <!-- Product Image Area -->
+
+                                            <div
+                                                id="preview-image-area"
+                                                class="relative h-56 flex items-center justify-center overflow-hidden"
+                                            >
+
+
+                                                <!-- Discount Badge -->
+
+                                                <span
+                                                    id="preview-discount-badge"
+                                                    class="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs font-medium px-2.5 py-1 rounded-full hidden"
+                                                >
+                                                </span>
+
+
+                                                <!-- Card Preview Image -->
+
+                                                <img
+                                                    id="card-preview-image"
+                                                    src=""
+                                                    alt="Product preview"
+                                                    class="hidden max-h-[13rem] max-w-[90%] w-auto h-auto object-contain"
+                                                >
+
+
+                                                <!-- No Image -->
+
+                                                <div
+                                                    id="card-preview-no-image"
+                                                    class="text-center text-gray-400"
+                                                >
+
+                                                    <i class="ri-image-line text-3xl"></i>
+
+                                                    <p class="text-xs mt-2">
+                                                        Product image preview
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <!-- Product Details Area -->
+
+                                            <div
+                                                id="preview-details-area"
+                                                class="flex items-center justify-between px-4 py-4"
+                                            >
+
+
+                                                <!-- Name + Price -->
+
+                                                <div class="min-w-0">
+
+                                                    <h3
+                                                        id="preview-product-name"
+                                                        class="font-medium text-sm truncate"
+                                                    >
+                                                        Product Name
+                                                    </h3>
+
+
+                                                    <div class="flex items-center gap-2 mt-1">
+
+                                                        <h4
+                                                            id="preview-product-price"
+                                                            class="font-semibold"
+                                                        >
+                                                            ₹0
+                                                        </h4>
+
+
+                                                        <span
+                                                            id="preview-original-price"
+                                                            class="text-xs opacity-60 line-through hidden"
+                                                        >
+                                                        </span>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <!-- Add Button -->
+
+                                                <button
+                                                    type="button"
+                                                    class="flex-shrink-0 ml-3 w-9 h-9 flex items-center justify-center rounded-full bg-white text-black shadow-sm"
+                                                >
+
+                                                    <i class="ri-add-line text-lg"></i>
+
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </section>
+
+
+                            <!-- =================================================
+                                 SUBMIT
+                            ================================================== -->
+
+                            <div
+                                class="border-t border-gray-100 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                            >
+
+                                <p class="text-xs text-gray-400">
+                                    Make sure all product details are correct before creating it.
+                                </p>
+
+
+                                <button
+                                    type="submit"
+                                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white hover:bg-gray-800 transition"
+                                >
+
+                                    <i class="ri-add-line"></i>
+
+                                    Create Product
+
+                                </button>
+
                             </div>
-                            <input class="px-5 py-2 rounded mt-3 bg-blue-500 text-white" type="submit"
-                                value="Create New Product">
+
+
                         </form>
-                    </main>
+
+                    </div>
+
                 </div>
-            </div>
-            <%- include('./partials/footer') %>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   VALIDATION ERROR AUTO DISMISS
+========================================================= */
+
+setTimeout(() => {
+
+    const errorBox =
+        document.getElementById("validation-error");
+
+    if (errorBox) {
+
+        errorBox.remove();
+
+    }
+
+}, 3000);
+
+
+
+/* =========================================================
+   IMAGE PREVIEW ELEMENTS
+========================================================= */
+
+const imageInput =
+    document.getElementById("product-image");
+
+const uploadPlaceholder =
+    document.getElementById("upload-placeholder");
+
+const imagePreviewContainer =
+    document.getElementById("image-preview-container");
+
+const imagePreview =
+    document.getElementById("image-preview");
+
+const previewFileName =
+    document.getElementById("preview-file-name");
+
+
+
+/* =========================================================
+   COLOR PICKER ELEMENTS
+========================================================= */
+
+const backgroundPicker =
+    document.getElementById("background-color-picker");
+
+const backgroundInput =
+    document.getElementById("background-color");
+
+
+const panelPicker =
+    document.getElementById("panel-color-picker");
+
+const panelInput =
+    document.getElementById("panel-color");
+
+
+const textPicker =
+    document.getElementById("text-color-picker");
+
+const textInput =
+    document.getElementById("text-color");
+
+
+
+/* =========================================================
+   PRODUCT CARD PREVIEW ELEMENTS
+========================================================= */
+
+const cardPreviewImage =
+    document.getElementById("card-preview-image");
+
+const cardPreviewNoImage =
+    document.getElementById("card-preview-no-image");
+
+const previewProductName =
+    document.getElementById("preview-product-name");
+
+const previewProductPrice =
+    document.getElementById("preview-product-price");
+
+const previewOriginalPrice =
+    document.getElementById("preview-original-price");
+
+const previewDiscountBadge =
+    document.getElementById("preview-discount-badge");
+
+const previewImageArea =
+    document.getElementById("preview-image-area");
+
+const previewDetailsArea =
+    document.getElementById("preview-details-area");
+
+
+const productNameInput =
+    document.getElementById("product-name");
+
+const productPriceInput =
+    document.getElementById("product-price");
+
+const productDiscountInput =
+    document.getElementById("product-discount");
+
+
+
+/* =========================================================
+   IMAGE INPUT
+========================================================= */
+
+imageInput.addEventListener("change", function () {
+
+    const file =
+        this.files[0];
+
+    if (!file) {
+
+        return;
+
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+        alert("Please select an image file.");
+
+        this.value = "";
+
+        return;
+
+    }
+
+
+    const imageUrl =
+        URL.createObjectURL(file);
+
+
+    imagePreview.src =
+        imageUrl;
+
+
+    previewFileName.textContent =
+        file.name;
+
+
+    uploadPlaceholder.classList.add(
+        "hidden"
+    );
+
+
+    imagePreviewContainer.classList.remove(
+        "hidden"
+    );
+
+
+    /*
+     * Update the product card image.
+     */
+
+    updateCardPreviewImage();
+
+
+    /*
+     * Extract colors from image.
+     */
+
+    extractImageColors(file);
+
+});
+
+
+
+/* =========================================================
+   CONNECT COLOR PICKER
+========================================================= */
+
+function connectColorPicker(
+    picker,
+    input
+) {
+
+
+    /*
+     * Color picker → text input
+     */
+
+    picker.addEventListener("input", () => {
+
+        input.value =
+            picker.value;
+
+        updateColorPreview();
+
+    });
+
+
+    /*
+     * Text input → color picker
+     */
+
+    input.addEventListener("input", () => {
+
+        const value =
+            input.value.trim();
+
+
+        if (
+            /^#[0-9A-Fa-f]{6}$/.test(value)
+        ) {
+
+            picker.value =
+                value;
+
+            updateColorPreview();
+
+        }
+
+    });
+
+}
+
+
+
+connectColorPicker(
+    backgroundPicker,
+    backgroundInput
+);
+
+
+connectColorPicker(
+    panelPicker,
+    panelInput
+);
+
+
+connectColorPicker(
+    textPicker,
+    textInput
+);
+
+
+
+/* =========================================================
+   UPDATE PRODUCT CARD PREVIEW
+========================================================= */
+
+function updateProductCardPreview() {
+
+
+    /*
+     * Product name
+     */
+
+    const productName =
+        productNameInput.value.trim();
+
+
+    previewProductName.textContent =
+        productName || "Product Name";
+
+
+    /*
+     * Product price
+     */
+
+    const price =
+        Number(productPriceInput.value) || 0;
+
+
+    /*
+     * Discount
+     */
+
+    const discount =
+        Number(productDiscountInput.value) || 0;
+
+
+    /*
+     * Final price
+     */
+
+    const finalPrice =
+        Math.max(
+            0,
+            price - discount
+        );
+
+
+    previewProductPrice.textContent =
+        `₹${finalPrice}`;
+
+
+    /*
+     * Original price
+     */
+
+    if (
+        discount > 0 &&
+        price > 0 &&
+        discount < price
+    ) {
+
+        previewOriginalPrice.textContent =
+            `₹${price}`;
+
+        previewOriginalPrice.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        previewOriginalPrice.textContent =
+            "";
+
+        previewOriginalPrice.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    /*
+     * Discount badge
+     */
+
+    if (
+        discount > 0 &&
+        price > 0 &&
+        discount < price
+    ) {
+
+        previewDiscountBadge.textContent =
+            `₹${discount} OFF`;
+
+        previewDiscountBadge.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        previewDiscountBadge.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    /*
+     * Background color
+     */
+
+    const backgroundColor =
+        backgroundInput.value.trim();
+
+
+    if (
+        /^#[0-9A-Fa-f]{6}$/.test(
+            backgroundColor
+        )
+    ) {
+
+        previewImageArea.style.backgroundColor =
+            backgroundColor;
+
+    }
+
+
+    /*
+     * Panel color
+     */
+
+    const panelColor =
+        panelInput.value.trim();
+
+
+    if (
+        /^#[0-9A-Fa-f]{6}$/.test(
+            panelColor
+        )
+    ) {
+
+        previewDetailsArea.style.backgroundColor =
+            panelColor;
+
+    }
+
+
+    /*
+     * Text color
+     */
+
+    const textColor =
+        textInput.value.trim();
+
+
+    if (
+        /^#[0-9A-Fa-f]{6}$/.test(
+            textColor
+        )
+    ) {
+
+        previewDetailsArea.style.color =
+            textColor;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   PRODUCT INPUT LISTENERS
+========================================================= */
+
+productNameInput.addEventListener(
+    "input",
+    updateProductCardPreview
+);
+
+
+productPriceInput.addEventListener(
+    "input",
+    updateProductCardPreview
+);
+
+
+productDiscountInput.addEventListener(
+    "input",
+    updateProductCardPreview
+);
+
+
+
+/* =========================================================
+   UPDATE CARD PREVIEW IMAGE
+========================================================= */
+
+function updateCardPreviewImage() {
+
+    if (
+        imagePreview.src &&
+        imagePreview.src !== window.location.href
+    ) {
+
+        cardPreviewImage.src =
+            imagePreview.src;
+
+        cardPreviewImage.classList.remove(
+            "hidden"
+        );
+
+        cardPreviewNoImage.classList.add(
+            "hidden"
+        );
+
+    } else {
+
+        cardPreviewImage.classList.add(
+            "hidden"
+        );
+
+        cardPreviewNoImage.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   UPDATE COLOR PREVIEW
+========================================================= */
+
+function updateColorPreview() {
+
+    updateProductCardPreview();
+
+}
+
+
+
+/* =========================================================
+   INITIAL PREVIEW
+========================================================= */
+
+updateColorPreview();
+
+updateCardPreviewImage();
+
+
+
+/* =========================================================
+   IMAGE COLOR EXTRACTION
+========================================================= */
+
+function extractImageColors(file) {
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function (event) {
+
+        const image =
+            new Image();
+
+
+        image.onload = function () {
+
+            const canvas =
+                document.createElement("canvas");
+
+
+            const context =
+                canvas.getContext(
+                    "2d",
+                    {
+                        willReadFrequently: true
+                    }
+                );
+
+
+            /*
+             * Resize the image before
+             * analyzing its pixels.
+             */
+
+            const maxSize =
+                140;
+
+            let width =
+                image.width;
+
+            let height =
+                image.height;
+
+
+            if (width > height) {
+
+                height =
+                    height *
+                    (maxSize / width);
+
+                width =
+                    maxSize;
+
+            } else {
+
+                width =
+                    width *
+                    (maxSize / height);
+
+                height =
+                    maxSize;
+
+            }
+
+
+            width =
+                Math.max(
+                    1,
+                    Math.round(width)
+                );
+
+
+            height =
+                Math.max(
+                    1,
+                    Math.round(height)
+                );
+
+
+            canvas.width =
+                width;
+
+            canvas.height =
+                height;
+
+
+            context.drawImage(
+                image,
+                0,
+                0,
+                width,
+                height
+            );
+
+
+            const imageData =
+                context.getImageData(
+                    0,
+                    0,
+                    width,
+                    height
+                );
+
+
+            const pixels =
+                imageData.data;
+
+
+            /*
+             * Estimate image background.
+             */
+
+            const backgroundColor =
+                estimateBackgroundColor(
+                    pixels,
+                    width,
+                    height
+                );
+
+
+            /*
+             * Identify product pixels.
+             */
+
+            const productColors =
+                getProductPixels(
+                    pixels,
+                    width,
+                    height,
+                    backgroundColor
+                );
+
+
+            /*
+             * Fallback if too few
+             * product pixels were found.
+             */
+
+            let colors =
+                productColors;
+
+
+            if (colors.length < 20) {
+
+                colors =
+                    getAllUsablePixels(
+                        pixels
+                    );
+
+            }
+
+
+            if (colors.length === 0) {
+
+                return;
+
+            }
+
+
+            /*
+             * Find dominant product color.
+             */
+
+            const dominantColor =
+                getWeightedDominantColor(
+                    colors,
+                    width,
+                    height,
+                    pixels,
+                    backgroundColor
+                );
+
+
+            /*
+             * Generate background.
+             */
+
+            const generatedBackground =
+                rgbToHex(
+                    dominantColor
+                );
+
+
+            /*
+             * Generate panel.
+             */
+
+            const generatedPanel =
+                rgbToHex(
+                    createPanelColor(
+                        dominantColor
+                    )
+                );
+
+
+            /*
+             * Generate readable text.
+             */
+
+            const generatedText =
+                getReadableTextColor(
+                    hexToRgb(
+                        generatedPanel
+                    )
+                );
+
+
+            /*
+             * Update background.
+             */
+
+            backgroundInput.value =
+                generatedBackground;
+
+            backgroundPicker.value =
+                generatedBackground;
+
+
+            /*
+             * Update panel.
+             */
+
+            panelInput.value =
+                generatedPanel;
+
+            panelPicker.value =
+                generatedPanel;
+
+
+            /*
+             * Update text.
+             */
+
+            textInput.value =
+                generatedText;
+
+            textPicker.value =
+                generatedText;
+
+
+            /*
+             * Update card preview.
+             */
+
+            updateColorPreview();
+
+        };
+
+
+        image.src =
+            event.target.result;
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+
+/* =========================================================
+   ESTIMATE BACKGROUND COLOR
+========================================================= */
+
+function estimateBackgroundColor(
+    pixels,
+    width,
+    height
+) {
+
+    const edgeColors =
+        [];
+
+
+    const step =
+        3;
+
+
+    /*
+     * Top edge
+     */
+
+    for (
+        let x = 0;
+        x < width;
+        x += step
+    ) {
+
+        addPixel(
+            edgeColors,
+            pixels,
+            x,
+            0,
+            width
+        );
+
+    }
+
+
+    /*
+     * Bottom edge
+     */
+
+    for (
+        let x = 0;
+        x < width;
+        x += step
+    ) {
+
+        addPixel(
+            edgeColors,
+            pixels,
+            x,
+            height - 1,
+            width
+        );
+
+    }
+
+
+    /*
+     * Left edge
+     */
+
+    for (
+        let y = 0;
+        y < height;
+        y += step
+    ) {
+
+        addPixel(
+            edgeColors,
+            pixels,
+            0,
+            y,
+            width
+        );
+
+    }
+
+
+    /*
+     * Right edge
+     */
+
+    for (
+        let y = 0;
+        y < height;
+        y += step
+    ) {
+
+        addPixel(
+            edgeColors,
+            pixels,
+            width - 1,
+            y,
+            width
+        );
+
+    }
+
+
+    if (edgeColors.length === 0) {
+
+        return {
+            r: 255,
+            g: 255,
+            b: 255
+        };
+
+    }
+
+
+    return getDominantColor(
+        edgeColors
+    );
+
+}
+
+
+
+/* =========================================================
+   ADD PIXEL
+========================================================= */
+
+function addPixel(
+    colors,
+    pixels,
+    x,
+    y,
+    width
+) {
+
+    const index =
+        (y * width + x) * 4;
+
+
+    const r =
+        pixels[index];
+
+    const g =
+        pixels[index + 1];
+
+    const b =
+        pixels[index + 2];
+
+    const alpha =
+        pixels[index + 3];
+
+
+    if (alpha < 200) {
+
+        return;
+
+    }
+
+
+    colors.push({
+        r,
+        g,
+        b
+    });
+
+}
+
+
+
+/* =========================================================
+   GET PRODUCT PIXELS
+========================================================= */
+
+function getProductPixels(
+    pixels,
+    width,
+    height,
+    backgroundColor
+) {
+
+    const productColors =
+        [];
+
+
+    const backgroundTolerance =
+        60;
+
+
+    for (
+        let y = 0;
+        y < height;
+        y += 2
+    ) {
+
+        for (
+            let x = 0;
+            x < width;
+            x += 2
+        ) {
+
+            const index =
+                (y * width + x) * 4;
+
+
+            const r =
+                pixels[index];
+
+            const g =
+                pixels[index + 1];
+
+            const b =
+                pixels[index + 2];
+
+            const alpha =
+                pixels[index + 3];
+
+
+            if (alpha < 200) {
+
+                continue;
+
+            }
+
+
+            /*
+             * Distance from estimated
+             * background.
+             */
+
+            const distance =
+                colorDistance(
+                    r,
+                    g,
+                    b,
+                    backgroundColor.r,
+                    backgroundColor.g,
+                    backgroundColor.b
+                );
+
+
+            /*
+             * Position relative to center.
+             */
+
+            const normalizedX =
+                x / width;
+
+            const normalizedY =
+                y / height;
+
+
+            const distanceFromCenter =
+                Math.sqrt(
+                    Math.pow(
+                        normalizedX - 0.5,
+                        2
+                    ) +
+                    Math.pow(
+                        normalizedY - 0.5,
+                        2
+                    )
+                );
+
+
+            /*
+             * Center bonus.
+             */
+
+            const centerBonus =
+                Math.max(
+                    0,
+                    1 -
+                    distanceFromCenter * 1.5
+                );
+
+
+            /*
+             * Required difference.
+             */
+
+            const requiredDistance =
+                backgroundTolerance -
+                centerBonus * 15;
+
+
+            if (
+                distance >
+                requiredDistance
+            ) {
+
+                productColors.push({
+
+                    r,
+                    g,
+                    b,
+                    x,
+                    y,
+
+                    weight:
+                        1 +
+                        centerBonus * 2
+
+                });
+
+            }
+
+        }
+
+    }
+
+
+    return productColors;
+
+}
+
+
+
+/* =========================================================
+   WEIGHTED DOMINANT COLOR
+========================================================= */
+
+function getWeightedDominantColor(
+    colors,
+    width,
+    height,
+    pixels,
+    backgroundColor
+) {
+
+    const colorMap =
+        {};
+
+
+    colors.forEach(color => {
+
+        /*
+         * Group similar colors.
+         */
+
+        const r =
+            Math.round(
+                color.r / 32
+            ) * 32;
+
+        const g =
+            Math.round(
+                color.g / 32
+            ) * 32;
+
+        const b =
+            Math.round(
+                color.b / 32
+            ) * 32;
+
+
+        const key =
+            `${r},${g},${b}`;
+
+
+        if (!colorMap[key]) {
+
+            colorMap[key] = {
+
+                weight: 0,
+                r,
+                g,
+                b
+
+            };
+
+        }
+
+
+        /*
+         * Center pixels contribute
+         * more heavily.
+         */
+
+        colorMap[key].weight +=
+            color.weight || 1;
+
+    });
+
+
+    let dominant =
+        null;
+
+
+    Object.values(
+        colorMap
+    ).forEach(color => {
+
+        if (
+            !dominant ||
+            color.weight >
+            dominant.weight
+        ) {
+
+            dominant =
+                color;
+
+        }
+
+    });
+
+
+    return dominant;
+
+}
+
+
+
+/* =========================================================
+   NORMAL DOMINANT COLOR
+========================================================= */
+
+function getDominantColor(
+    colors
+) {
+
+    const colorMap =
+        {};
+
+
+    colors.forEach(color => {
+
+        const r =
+            Math.round(
+                color.r / 32
+            ) * 32;
+
+        const g =
+            Math.round(
+                color.g / 32
+            ) * 32;
+
+        const b =
+            Math.round(
+                color.b / 32
+            ) * 32;
+
+
+        const key =
+            `${r},${g},${b}`;
+
+
+        if (!colorMap[key]) {
+
+            colorMap[key] = {
+
+                count: 0,
+                r,
+                g,
+                b
+
+            };
+
+        }
+
+
+        colorMap[key].count++;
+
+    });
+
+
+    let dominant =
+        null;
+
+
+    Object.values(
+        colorMap
+    ).forEach(color => {
+
+        if (
+            !dominant ||
+            color.count >
+            dominant.count
+        ) {
+
+            dominant =
+                color;
+
+        }
+
+    });
+
+
+    return dominant;
+
+}
+
+
+
+/* =========================================================
+   GET ALL USABLE PIXELS
+========================================================= */
+
+function getAllUsablePixels(
+    pixels
+) {
+
+    const colors =
+        [];
+
+
+    for (
+        let i = 0;
+        i < pixels.length;
+        i += 16
+    ) {
+
+        const r =
+            pixels[i];
+
+        const g =
+            pixels[i + 1];
+
+        const b =
+            pixels[i + 2];
+
+        const alpha =
+            pixels[i + 3];
+
+
+        if (alpha < 200) {
+
+            continue;
+
+        }
+
+
+        colors.push({
+
+            r,
+            g,
+            b
+
+        });
+
+    }
+
+
+    return colors;
+
+}
+
+
+
+/* =========================================================
+   CREATE PANEL COLOR
+========================================================= */
+
+function createPanelColor(
+    color
+) {
+
+    const brightness =
+        (
+            color.r * 299 +
+            color.g * 587 +
+            color.b * 114
+        ) / 1000;
+
+
+    /*
+     * Very dark product.
+     */
+
+    if (brightness < 90) {
+
+        return {
+
+            r: 235,
+            g: 235,
+            b: 235
+
+        };
+
+    }
+
+
+    /*
+     * Medium-dark product.
+     */
+
+    if (brightness < 150) {
+
+        return {
+
+            r:
+                Math.round(
+                    color.r +
+                    (255 - color.r) * 0.65
+                ),
+
+            g:
+                Math.round(
+                    color.g +
+                    (255 - color.g) * 0.65
+                ),
+
+            b:
+                Math.round(
+                    color.b +
+                    (255 - color.b) * 0.65
+                )
+
+        };
+
+    }
+
+
+    /*
+     * Light product.
+     */
+
+    return {
+
+        r:
+            Math.min(
+                255,
+                Math.round(
+                    color.r * 0.75 +
+                    255 * 0.25
+                )
+            ),
+
+        g:
+            Math.min(
+                255,
+                Math.round(
+                    color.g * 0.75 +
+                    255 * 0.25
+                )
+            ),
+
+        b:
+            Math.min(
+                255,
+                Math.round(
+                    color.b * 0.75 +
+                    255 * 0.25
+                )
+            )
+
+    };
+
+}
+
+
+
+/* =========================================================
+   READABLE TEXT COLOR
+========================================================= */
+
+function getReadableTextColor(
+    color
+) {
+
+    const brightness =
+        (
+            color.r * 299 +
+            color.g * 587 +
+            color.b * 114
+        ) / 1000;
+
+
+    if (brightness > 155) {
+
+        return "#111827";
+
+    }
+
+
+    return "#ffffff";
+
+}
+
+
+
+/* =========================================================
+   HEX → RGB
+========================================================= */
+
+function hexToRgb(
+    hex
+) {
+
+    const value =
+        hex.replace(
+            "#",
+            ""
+        );
+
+
+    return {
+
+        r:
+            parseInt(
+                value.substring(
+                    0,
+                    2
+                ),
+                16
+            ),
+
+        g:
+            parseInt(
+                value.substring(
+                    2,
+                    4
+                ),
+                16
+            ),
+
+        b:
+            parseInt(
+                value.substring(
+                    4,
+                    6
+                ),
+                16
+            )
+
+    };
+
+}
+
+
+
+/* =========================================================
+   RGB → HEX
+========================================================= */
+
+function rgbToHex(
+    color
+) {
+
+    return "#" +
+
+        [
+            color.r,
+            color.g,
+            color.b
+        ]
+
+            .map(value => {
+
+                return Math.max(
+                    0,
+                    Math.min(
+                        255,
+                        Math.round(value)
+                    )
+                )
+                    .toString(16)
+                    .padStart(
+                        2,
+                        "0"
+                    );
+
+            })
+
+            .join("");
+
+}
+
+
+
+/* =========================================================
+   COLOR DISTANCE
+========================================================= */
+
+function colorDistance(
+    r1,
+    g1,
+    b1,
+    r2,
+    g2,
+    b2
+) {
+
+    const redDifference =
+        r1 - r2;
+
+
+    const greenDifference =
+        g1 - g2;
+
+
+    const blueDifference =
+        b1 - b2;
+
+
+    return Math.sqrt(
+
+        redDifference *
+        redDifference +
+
+        greenDifference *
+        greenDifference +
+
+        blueDifference *
+        blueDifference
+
+    );
+
+}
+
+</script>
+
+
+<%- include('./partials/footer') %>

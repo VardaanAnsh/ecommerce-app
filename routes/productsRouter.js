@@ -28,6 +28,7 @@ router.get('/image/:id', async function(req, res) {
 
 
 // CREATE PRODUCT
+
 router.post(
     "/create",
     isLoggedIn,
@@ -36,12 +37,21 @@ router.post(
     async function(req, res) {
 
         try {
+
             const { error, value } = productValidation.validate(req.body);
 
             if (error) {
-                return res.status(400).json({
-                    message: error.details[0].message
-                });
+
+                req.flash("validationError", error.details[0].message);
+                req.flash("productFormData", JSON.stringify(req.body));
+                return res.redirect("/owners/admin");
+
+            }
+
+            if (!req.file) {
+                req.flash("validationError", "Please select a product image");
+                req.flash("productFormData", JSON.stringify(req.body));
+                return res.redirect("/owners/admin");
             }
 
             const {
@@ -53,7 +63,7 @@ router.post(
                 textcolor
             } = value;
 
-            let product = await productmodel.create({
+            await productmodel.create({
                 image: req.file.buffer,
                 name,
                 price,
@@ -63,14 +73,24 @@ router.post(
                 textcolor,
             });
 
-            req.flash("success", "Product created Successfully!");
+            req.flash(
+                "success",
+                "Product created successfully!"
+            );
+
             res.redirect("/owners/admin");
 
-        } catch(error) {
+        } catch (error) {
             console.error(error);
-            res.status(500).json({
-                message: error.message
-            });
+
+            req.flash(
+                "validationError",
+                "Something went wrong. Please try again."
+            );
+
+            req.flash("productFormData", JSON.stringify(req.body));
+
+            return res.redirect("/owners/admin");
         }
     }
 );

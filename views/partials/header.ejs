@@ -183,6 +183,58 @@
 
     </nav>
 
+    <% if (success && success.length > 0) { %>
+
+    <div
+        id="flash-success"
+        class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 mt-4">
+
+        <div class="flex items-center gap-3
+                    rounded-lg
+                    border border-green-200
+                    bg-green-50
+                    px-4 py-3">
+
+            <i class="ri-checkbox-circle-line text-green-500 text-lg"></i>
+
+            <div class="text-sm text-green-600">
+                <% success.forEach(message => { %>
+                    <p><%= message %></p>
+                <% }) %>
+            </div>
+
+        </div>
+
+    </div>
+
+<% } %>
+
+    <% if (error && error.length > 0) { %>
+
+    <div
+        id="flash-error"
+        class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 mt-4">
+
+        <div class="flex items-center gap-3
+                    rounded-lg
+                    border border-red-200
+                    bg-red-50
+                    px-4 py-3">
+
+            <i class="ri-error-warning-line text-red-500 text-lg"></i>
+
+            <div class="text-sm text-red-600">
+                <% error.forEach(message => { %>
+                    <p><%= message %></p>
+                <% }) %>
+            </div>
+
+        </div>
+
+    </div>
+
+<% } %>
+
 
     <!-- Mobile Menu Script -->
 
@@ -219,3 +271,22 @@
         }
 
     </script>
+
+
+<script>
+
+    const flashSuccess = document.getElementById("flash-success");
+
+        if (flashSuccess) {
+            setTimeout(() => {
+                flashSuccess.remove();
+            }, 3000);
+        }
+    const flashError = document.getElementById("flash-error");
+
+    if (flashError) {
+        setTimeout(() => {
+            flashError.remove();
+        }, 3000);
+    }
+</script>
