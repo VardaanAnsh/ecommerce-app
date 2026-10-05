@@ -4,7 +4,11 @@
         <% user.cart.forEach((item, index) => { %>
             <div class="w-full rounded-md overflow-hidden border border-gray-300 shadow-sm">
                 <div class="w-full h-64 flex justify-center items-center bg-[<%= item.product.bgcolor %>]">
-                    <img class="h-48 object-contain" src="data:image/jpeg;base64,<%= item.product.image.toString('base64') %>" alt="<%= item.product.name %>">
+                    <img
+                        class="h-48 object-contain"
+                        src="/products/image/<%= item.product._id %>"
+                        alt="<%= item.product.name %>"
+                    >
                 </div>
                 <div class="w-full bg-[<%= item.product.panelcolor %>] flex justify-between px-5 py-4 items-center">
                     <h3 class="text-2xl text-[<%= item.product.textcolor %>]"><%= item.product.name %></h3>

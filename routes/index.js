@@ -1,18 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
+const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
-const redisClient = require('../config/redis');
-const isLoggedIn = require('../middlewares/isLoggedIn');
-const productModel = require('../models/product-model');
-const userModel = require('../models/user-model');
-const orderModel = require('../models/order-model');
+const redisClient = require("../config/redis");
+const isLoggedIn = require("../middlewares/isLoggedIn");
+const productModel = require("../models/product-model");
+const userModel = require("../models/user-model");
+const orderModel = require("../models/order-model");
 
-router.get('/', function(req, res){
-    let error = req.flash('error');
-    let loginSuccess = req.flash('loginSuccess');
-    let loginError = req.flash('loginError');  
+router.get("/", function (req, res) {
+  let error = req.flash("error");
+  let loginSuccess = req.flash("loginSuccess");
+  let loginError = req.flash("loginError");
 
-    res.render('index', { error, loginSuccess, loginError, loggedin: false });
+  res.render("index", { error, loginSuccess, loginError, loggedin: false });
 });
 
 // router.get('/shop',isLoggedIn, async (req, res) => {
@@ -28,109 +28,92 @@ router.get('/', function(req, res){
 // });
 
 //CACHING OF PRODUCTS IN REDIS
-router.get('/shop', isLoggedIn, async (req, res) => {
-    console.log('SHOP ROUTE HIT');
+router.get("/shop", isLoggedIn, async (req, res) => {
+  console.log("SHOP ROUTE HIT");
 
-    try {
-        const cacheKey = 'products:all';
+  try {
+    const cacheKey = "products:all";
 
-        const cachedProducts = await redisClient.get(cacheKey);
+    const cachedProducts = await redisClient.get(cacheKey);
 
-        if (cachedProducts) {
-            console.log('CACHE HIT');
+    if (cachedProducts) {
+      console.log("CACHE HIT");
 
-            const products = JSON.parse(cachedProducts);
+      const products = JSON.parse(cachedProducts);
 
-            return res.render('shop', { products });
-        }
-
-        console.log('CACHE MISS');
-
-        const products = await productModel.find({}).lean();
-
-        const productsForCache = products.map(product => ({
-            ...product,
-            imageBase64: product.image
-                ? product.image.toString('base64')
-                : ''
-        }));
-
-        await redisClient.setEx(
-            cacheKey,
-            60,
-            JSON.stringify(productsForCache)
-        );
-
-        res.render('shop', { products: productsForCache });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
+      return res.render("shop", { products });
     }
+
+    console.log("CACHE MISS");
+
+    const products = await productModel.find({}).select("-image").lean();
+
+    await redisClient.setEx(cacheKey, 60, JSON.stringify(products));
+
+    res.render("shop", { products });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
 });
 
-
-router.get('/cart', isLoggedIn, async function(req, res) {
-    try {
-        const user = await userModel
-            .findById(req.user._id)
-            .populate('cart.product');
-
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-
-        const hasUnavailableProducts = user.cart.some(
-            item => !item.product
-        );
-
-        if (hasUnavailableProducts) {
-            user.cart = user.cart.filter(item => item.product);
-            await user.save();
-
-            req.flash(
-                'error',
-                'Some products in your cart are no longer available and were removed.'
-            );
-
-            return res.redirect('/cart');
-        }
-
-        res.render('cart', { user });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Something went wrong');
-    }
-});
-
-router.get('/users/shop',isLoggedIn, async function(req, res){
-    let products = await productModel.find();
-    const success = req.flash('success');
-    res.render('shop', { products, success });
-});
-
-
-router.get('/account', isLoggedIn, async function(req, res) {
-    try {
-        const user = await userModel
-            .findById(req.user._id)
-            .select('-password');
-
-        const orders = await orderModel
-            .find({ user: req.user._id })
-            .sort({ createdAt: -1 })
-            .limit(5);
-
-        res.render('account', {
-            user,
-            orders
+router.get("/cart", isLoggedIn, async function (req, res) {
+  try {
+      const user = await userModel
+        .findById(req.user._id)
+        .populate({
+            path: 'cart.product',
+            select: '-image'
         });
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Something went wrong');
+    if (!user) {
+      return res.status(404).send("User not found");
     }
+
+    const hasUnavailableProducts = user.cart.some((item) => !item.product);
+
+    if (hasUnavailableProducts) {
+      user.cart = user.cart.filter((item) => item.product);
+      await user.save();
+
+      req.flash(
+        "error",
+        "Some products in your cart are no longer available and were removed.",
+      );
+
+      return res.redirect("/cart");
+    }
+
+    res.render("cart", { user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
+});
+
+router.get("/users/shop", isLoggedIn, async function (req, res) {
+  let products = await productModel.find();
+  const success = req.flash("success");
+  res.render("shop", { products, success });
+});
+
+router.get("/account", isLoggedIn, async function (req, res) {
+  try {
+    const user = await userModel.findById(req.user._id).select("-password");
+
+    const orders = await orderModel
+      .find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.render("account", {
+      user,
+      orders,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
 });
 
 // router.get('/addtocart/:id',isLoggedIn, async function(req, res){
@@ -141,248 +124,242 @@ router.get('/account', isLoggedIn, async function(req, res) {
 //    res.redirect('/shop');
 // });
 
-router.post('/cart/:productId', isLoggedIn, async function(req, res) {
-    try {
-
-        if (!mongoose.Types.ObjectId.isValid(req.params.productId)) 
-        {
-            return res.status(400).json({
-                message: 'Invalid product ID'
-            });
-        }
-
-        const product = await productModel.findById(req.params.productId);
-
-        if (!product) {
-            return res.status(404).json({
-                message: 'Product not found'
-            });
-        }
-
-        const user = await userModel.findById(req.user._id);
-
-        const existingItem = user.cart.find(
-            item => item.product.toString() === req.params.productId
-        );
-
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            user.cart.push({
-                product: req.params.productId,
-                quantity: 1
-            });
-        }
-
-        await user.save();
-        // console.log("ADDING FLASH MESSAGE");
-        // console.log("ADDING FLASH MESSAGE - session:", req.sessionID);
-        req.flash('success', 'Product added to Cart');
-        res.redirect('/shop');
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Something went wrong');
-    }
-});
-
-
-router.patch('/cart/:productId', isLoggedIn, async function(req, res) {
-    try {
-        const quantity = Number(req.body.quantity);
-
-        if (!Number.isInteger(quantity) || quantity < 1) {
-            return res.status(400).json({
-                message: 'Invalid quantity'
-            });
-        }
-
-        const user = await userModel.findById(req.user._id);
-
-        const cartItem = user.cart.find(
-            item => item.product.toString() === req.params.productId
-        );
-
-        if (!cartItem) {
-            return res.status(404).json({
-                message: 'Product not found in cart'
-            });
-        }
-
-        cartItem.quantity = quantity;
-
-        await user.save();
-
-        res.json({
-            success: true,
-            quantity: cartItem.quantity
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Something went wrong'
-        });
-    }
-});
-
-router.delete('/cart/:productId', isLoggedIn, async function(req, res) {
-    try {
-        const user = await userModel.findById(req.user._id);
-
-        const cartItem = user.cart.find(
-            item => item.product.toString() === req.params.productId
-        );
-
-        if (!cartItem) {
-            return res.status(404).json({
-                message: 'Product not found in cart'
-            });
-        }
-        //filter creates new array with only values that match condition  
-        user.cart = user.cart.filter(
-            item => item.product.toString() !== req.params.productId
-        );
-
-        await user.save();
-
-        res.json({
-            success: true
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Something went wrong'
-        });
-    }
-});
-
-router.post('/checkout', isLoggedIn, async function(req, res) {
-    try {
-        const user = await userModel
-            .findById(req.user._id)
-            .populate('cart.product');
-
-        if (!user) {
-            return res.status(404).json({
-                message: 'User not found'
-            });
-        }
-
-        if (!user.cart || user.cart.length === 0) {
-            return res.status(400).json({
-                message: 'Cart is empty'
-            });
-        }
-        const unavailableProduct = user.cart.find(item => !item.product);
-
-        if (unavailableProduct) {
-            return res.status(400).json({
-                message: 'One or more products in your cart are no longer available. Please review your cart.'
-            });
-        }
-        const invalidQuantity = user.cart.find(
-            item => !Number.isInteger(item.quantity) || item.quantity < 1
-        );
-
-        if (invalidQuantity) {
-            return res.status(400).json({
-                message: 'Invalid product quantity in cart.'
-            });
-        }
-        
-        if (!mongoose.Types.ObjectId.isValid(req.body.addressId)) {
-            return res.status(400).json({ message: 'Invalid address ID' });
-        }
-
-        const address = user.addresses.id(req.body.addressId);
-
-        if (!address) {
-            return res.status(404).json({
-                message: 'Address not found'
-            });
-        }
-
-        const items = user.cart.map(item => ({
-            product: item.product._id,
-            name: item.product.name,
-            price: item.product.price,
-            quantity: item.quantity,
-            discount: item.product.discount
-        }));
-
-        const totalAmount = user.cart.reduce((total, item) => {
-            return total +
-                (item.product.price - item.product.discount)
-                * item.quantity
-                + 20;
-        }, 0);
-
-        const order = await orderModel.create({
-            user: user._id,
-
-            items,
-
-            shippingAddress: {
-                label: address.label,
-                name: address.name,
-                phone: address.phone,
-                addressLine: address.addressLine,
-                city: address.city,
-                state: address.state,
-                pincode: address.pincode
-            },
-
-            totalAmount
-        });
-
-        user.cart = [];
-
-        await user.save();
-
-        res.json({
-            success: true,
-            orderId: order._id,
-            totalAmount: order.totalAmount
-        });
-
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            message: 'Something went wrong during checkout'
-        });
-    }
-});
-
-router.get('/order-success', isLoggedIn, async function(req, res) {
+router.post("/cart/:productId", isLoggedIn, async function (req, res) {
   try {
-    const order = await orderModel.findOne({
-      _id: req.query.orderId,
-      user: req.user._id
-    });
-
-    if (!order) {
-      return res.redirect('/orders');
+    if (!mongoose.Types.ObjectId.isValid(req.params.productId)) {
+      return res.status(400).json({
+        message: "Invalid product ID",
+      });
     }
 
-    res.render('order-success', { order });
+    const product = await productModel.findById(req.params.productId);
 
-  } catch(error) {
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const user = await userModel.findById(req.user._id);
+
+    const existingItem = user.cart.find(
+      (item) => item.product.toString() === req.params.productId,
+    );
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      user.cart.push({
+        product: req.params.productId,
+        quantity: 1,
+      });
+    }
+
+    await user.save();
+    // console.log("ADDING FLASH MESSAGE");
+    // console.log("ADDING FLASH MESSAGE - session:", req.sessionID);
+    req.flash("success", "Product added to Cart");
+    res.redirect("/shop");
+  } catch (error) {
     console.error(error);
-    res.status(500).send('Something went wrong');
+    res.status(500).send("Something went wrong");
   }
 });
 
-router.get('/checkout', isLoggedIn, async function(req,res){
+router.patch("/cart/:productId", isLoggedIn, async function (req, res) {
+  try {
+    const quantity = Number(req.body.quantity);
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      return res.status(400).json({
+        message: "Invalid quantity",
+      });
+    }
+
+    const user = await userModel.findById(req.user._id);
+
+    const cartItem = user.cart.find(
+      (item) => item.product.toString() === req.params.productId,
+    );
+
+    if (!cartItem) {
+      return res.status(404).json({
+        message: "Product not found in cart",
+      });
+    }
+
+    cartItem.quantity = quantity;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      quantity: cartItem.quantity,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+});
+
+router.delete("/cart/:productId", isLoggedIn, async function (req, res) {
+  try {
+    const user = await userModel.findById(req.user._id);
+
+    const cartItem = user.cart.find(
+      (item) => item.product.toString() === req.params.productId,
+    );
+
+    if (!cartItem) {
+      return res.status(404).json({
+        message: "Product not found in cart",
+      });
+    }
+    //filter creates new array with only values that match condition
+    user.cart = user.cart.filter(
+      (item) => item.product.toString() !== req.params.productId,
+    );
+
+    await user.save();
+
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+});
+
+router.post("/checkout", isLoggedIn, async function (req, res) {
   try {
     const user = await userModel
       .findById(req.user._id)
-      .populate('cart.product');
+      .populate("cart.product");
 
-    if(!user.cart || user.cart.length === 0){
-      return res.redirect('/cart');
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (!user.cart || user.cart.length === 0) {
+      return res.status(400).json({
+        message: "Cart is empty",
+      });
+    }
+    const unavailableProduct = user.cart.find((item) => !item.product);
+
+    if (unavailableProduct) {
+      return res.status(400).json({
+        message:
+          "One or more products in your cart are no longer available. Please review your cart.",
+      });
+    }
+    const invalidQuantity = user.cart.find(
+      (item) => !Number.isInteger(item.quantity) || item.quantity < 1,
+    );
+
+    if (invalidQuantity) {
+      return res.status(400).json({
+        message: "Invalid product quantity in cart.",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(req.body.addressId)) {
+      return res.status(400).json({ message: "Invalid address ID" });
+    }
+
+    const address = user.addresses.id(req.body.addressId);
+
+    if (!address) {
+      return res.status(404).json({
+        message: "Address not found",
+      });
+    }
+
+    const items = user.cart.map((item) => ({
+      product: item.product._id,
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+      discount: item.product.discount,
+    }));
+
+    const totalAmount = user.cart.reduce((total, item) => {
+      return (
+        total +
+        (item.product.price - item.product.discount) * item.quantity +
+        20
+      );
+    }, 0);
+
+    const order = await orderModel.create({
+      user: user._id,
+
+      items,
+
+      shippingAddress: {
+        label: address.label,
+        name: address.name,
+        phone: address.phone,
+        addressLine: address.addressLine,
+        city: address.city,
+        state: address.state,
+        pincode: address.pincode,
+      },
+
+      totalAmount,
+    });
+
+    user.cart = [];
+
+    await user.save();
+
+    res.json({
+      success: true,
+      orderId: order._id,
+      totalAmount: order.totalAmount,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Something went wrong during checkout",
+    });
+  }
+});
+
+router.get("/order-success", isLoggedIn, async function (req, res) {
+  try {
+    const order = await orderModel.findOne({
+      _id: req.query.orderId,
+      user: req.user._id,
+    });
+
+    if (!order) {
+      return res.redirect("/orders");
+    }
+
+    res.render("order-success", { order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
+});
+
+router.get("/checkout", isLoggedIn, async function (req, res) {
+  try {
+    const user = await userModel
+      .findById(req.user._id)
+      .populate("cart.product");
+
+    if (!user.cart || user.cart.length === 0) {
+      return res.redirect("/cart");
     }
 
     const totalItems = user.cart.reduce((total, item) => {
@@ -390,70 +367,64 @@ router.get('/checkout', isLoggedIn, async function(req,res){
     }, 0);
 
     const subtotal = user.cart.reduce((total, item) => {
-      return total + (item.product.price * item.quantity);
+      return total + item.product.price * item.quantity;
     }, 0);
 
     const discount = user.cart.reduce((total, item) => {
-      return total + (item.product.discount*item.quantity);
+      return total + item.product.discount * item.quantity;
     }, 0);
 
     const platformFee = user.cart.length * 20;
 
     const totalAmount = subtotal - discount + platformFee;
 
-    res.render('checkout', {
+    res.render("checkout", {
       user,
       totalItems,
       subtotal,
       discount,
       platformFee,
-      totalAmount
+      totalAmount,
     });
-
-  } catch(error) {
+  } catch (error) {
     console.error(error);
-    res.status(500).send('Something went wrong');
+    res.status(500).send("Something went wrong");
   }
 });
 
+router.get("/orders", isLoggedIn, async function (req, res) {
+  try {
+    const orders = await orderModel
+      .find({ user: req.user._id })
+      .sort({ createdAt: -1 });
 
-router.get('/orders', isLoggedIn, async function(req, res) {
-    try {
-        const orders = await orderModel
-            .find({ user: req.user._id })
-            .sort({ createdAt: -1 });
-
-        res.render('orders', { orders });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Something went wrong');
-    }
+    res.render("orders", { orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
 });
 
-router.get('/orders/:orderId', isLoggedIn, async function(req, res) {
-    try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.orderId)) {
-            return res.status(400).send('Invalid order ID');
-        }
-
-        const order = await orderModel.findOne({
-            _id: req.params.orderId,
-            user: req.user._id
-        });
-
-        if (!order) {
-            return res.status(404).send('Order not found');
-        }
-
-        res.render('order-details', { order });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Something went wrong');
+router.get("/orders/:orderId", isLoggedIn, async function (req, res) {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.orderId)) {
+      return res.status(400).send("Invalid order ID");
     }
+
+    const order = await orderModel.findOne({
+      _id: req.params.orderId,
+      user: req.user._id,
+    });
+
+    if (!order) {
+      return res.status(404).send("Order not found");
+    }
+
+    res.render("order-details", { order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
 });
-
-
 
 module.exports = router;

@@ -1,44 +1,78 @@
 const express = require('express');
-
 const router = express.Router();
 
 const upload = require('../config/multer-config');
-
 const productmodel = require('../models/product-model');
-
 const isLoggedIn = require('../middlewares/isLoggedIn');
-
 const isOwner = require('../middlewares/isOwner');
-
 const productValidation = require('../validations/productValidation');
 
-router.post("/create", isLoggedIn , isOwner , upload.single("image") ,async function(req, res){
-    try 
-{   
-    const {error,value} = productValidation.validate(req.body);
-    if(error){
-        return res.status(400).json({
-            message : error.details[0].message
-        })
-    }
-    const {name,price,discount,bgcolor,panelcolor,textcolor} = value;
 
-   let product =  await productmodel.create({
-    image : req.file.buffer,
-    name,
-    price,
-    discount,
-    bgcolor,
-    panelcolor,
-    textcolor,
-   });
-   req.flash("success","Product created Successfully!");
-   res.redirect("/owners/admin");
-}
-    catch(error){
+// GET PRODUCT IMAGE
+router.get('/image/:id', async function(req, res) {
+    try {
+        const product = await productmodel.findById(req.params.id);
+
+        if (!product || !product.image) {
+            return res.status(404).send('Image not found');
+        }
+
+        res.set('Content-Type', 'image/jpeg');
+        res.send(product.image);
+
+    } catch (error) {
         console.error(error);
-        res.status(500).json({message: error.message});
+        res.status(500).send('Something went wrong');
     }
-}); 
+});
 
-module.exports= router;
+
+// CREATE PRODUCT
+router.post(
+    "/create",
+    isLoggedIn,
+    isOwner,
+    upload.single("image"),
+    async function(req, res) {
+
+        try {
+            const { error, value } = productValidation.validate(req.body);
+
+            if (error) {
+                return res.status(400).json({
+                    message: error.details[0].message
+                });
+            }
+
+            const {
+                name,
+                price,
+                discount,
+                bgcolor,
+                panelcolor,
+                textcolor
+            } = value;
+
+            let product = await productmodel.create({
+                image: req.file.buffer,
+                name,
+                price,
+                discount,
+                bgcolor,
+                panelcolor,
+                textcolor,
+            });
+
+            req.flash("success", "Product created Successfully!");
+            res.redirect("/owners/admin");
+
+        } catch(error) {
+            console.error(error);
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    }
+);
+
+module.exports = router;
