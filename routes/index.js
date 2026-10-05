@@ -91,12 +91,6 @@ router.get("/cart", isLoggedIn, async function (req, res) {
   }
 });
 
-router.get("/users/shop", isLoggedIn, async function (req, res) {
-  let products = await productModel.find();
-  const success = req.flash("success");
-  res.render("shop", { products, success });
-});
-
 router.get("/account", isLoggedIn, async function (req, res) {
   try {
     const user = await userModel.findById(req.user._id).select("-password");
@@ -239,7 +233,10 @@ router.post("/checkout", isLoggedIn, async function (req, res) {
   try {
     const user = await userModel
       .findById(req.user._id)
-      .populate("cart.product");
+      .populate({
+            path: "cart.product",
+            select: "-image"
+        });
 
     if (!user) {
       return res.status(404).json({
@@ -356,7 +353,10 @@ router.get("/checkout", isLoggedIn, async function (req, res) {
   try {
     const user = await userModel
       .findById(req.user._id)
-      .populate("cart.product");
+      .populate({
+        path: "cart.product",
+        select: "-image"
+    });
 
     if (!user.cart || user.cart.length === 0) {
       return res.redirect("/cart");
