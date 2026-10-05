@@ -1,218 +1,956 @@
 <%- include('./partials/header') %>
-<div class="w-full h-screen flex items-start px-10 py-10 gap-8">
-    <div class="w-[40%] flex flex-col gap-6 overflow-hidden inline-block pb-10">
-        <% user.cart.forEach((item, index) => { %>
-            <div class="w-full rounded-md overflow-hidden border border-gray-300 shadow-sm">
-                <div class="w-full h-64 flex justify-center items-center bg-[<%= item.product.bgcolor %>]">
-                    <img
-                        class="h-48 object-contain"
-                        src="/products/image/<%= item.product._id %>"
-                        alt="<%= item.product.name %>"
-                    >
-                </div>
-                <div class="w-full bg-[<%= item.product.panelcolor %>] flex justify-between px-5 py-4 items-center">
-                    <h3 class="text-2xl text-[<%= item.product.textcolor %>]"><%= item.product.name %></h3>
-                    <div class="flex items-center gap-2">
-                        <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line cursor-pointer increment"
-                            data-id="<%= index %>"
-                            data-product-id="<%= item.product._id %>"
-                            data-price="<%= item.product.price %>"
-                            data-discount="<%= item.product.discount %>"></i>
-                        <div id="quantity-<%= index %>" class="px-2 py-1 rounded-md bg-white text-black"><%= item.quantity %></div>
-                        <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line cursor-pointer decrement"
-                            data-id="<%= index %>"
-                            data-product-id="<%= item.product._id %>"
-                            data-price="<%= item.product.price %>"
-                            data-discount="<%= item.product.discount %>"></i>
-                        <i class="w-7 h-7 bg-white flex text-red flex rounded-full items-center justify-center ri-delete-bin-line cursor-pointer remove-item"
-                            data-product-id="<%= item.product._id %>"></i>
+
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+
+
+    <!-- ================= PAGE HEADER ================= -->
+
+    <div class="mb-8">
+
+        <p class="text-sm text-gray-500 mb-1">
+            Cartinger
+        </p>
+
+        <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">
+            Your Cart
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+            Review your items before checkout.
+        </p>
+
+    </div>
+
+
+    <% if (user.cart && user.cart.length > 0) { %>
+
+
+        <!-- ================= CART LAYOUT ================= -->
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+
+            <!-- ================================================= -->
+            <!-- CART ITEMS                                        -->
+            <!-- ================================================= -->
+
+            <div class="lg:col-span-3 space-y-5">
+
+
+                <% user.cart.forEach((item, index) => { %>
+
+
+                    <!-- Cart Item -->
+
+                    <div
+                        class="overflow-hidden
+                               rounded-2xl
+                               border border-gray-200
+                               bg-white
+                               shadow-sm">
+
+
+                        <!-- Product -->
+
+                        <div class="flex flex-col sm:flex-row">
+
+
+                            <!-- Product Image -->
+
+                            <div
+                                class="w-full sm:w-44
+                                       h-48 sm:h-44
+                                       flex-shrink-0
+                                       flex items-center justify-center
+                                       bg-[<%= item.product.bgcolor %>]">
+
+                                <img
+                                    src="/products/image/<%= item.product._id %>"
+                                    alt="<%= item.product.name %>"
+                                    class="max-h-36 max-w-[85%]
+                                           object-contain">
+
+                            </div>
+
+
+                            <!-- Product Information -->
+
+                            <div class="flex-1 p-5">
+
+
+                                <div
+                                    class="flex items-start
+                                           justify-between gap-4">
+
+
+                                    <div>
+
+                                        <h2
+                                            class="text-lg font-semibold
+                                                   text-gray-900">
+
+                                            <%= item.product.name %>
+
+                                        </h2>
+
+
+                                        <div class="flex items-center gap-2 mt-1">
+
+                                            <span
+                                                class="font-semibold
+                                                       text-gray-900">
+
+                                                ₹<%= item.product.price - item.product.discount %>
+
+                                            </span>
+
+
+                                            <% if (item.product.discount && item.product.discount > 0) { %>
+
+                                                <span
+                                                    class="text-sm text-gray-400
+                                                           line-through">
+
+                                                    ₹<%= item.product.price %>
+
+                                                </span>
+
+                                            <% } %>
+
+                                        </div>
+
+
+                                        <% if (item.product.discount && item.product.discount > 0) { %>
+
+                                            <span
+                                                class="inline-block mt-2
+                                                       text-xs font-medium
+                                                       text-red-500">
+
+                                                ₹<%= item.product.discount %> OFF
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- Remove -->
+
+                                    <button
+                                        type="button"
+                                        aria-label="Remove <%= item.product.name %>"
+                                        class="remove-item
+                                               text-gray-400
+                                               hover:text-red-500
+                                               transition"
+                                        data-product-id="<%= item.product._id %>">
+
+                                        <i class="ri-delete-bin-line text-lg"></i>
+
+                                    </button>
+
+
+                                </div>
+
+
+                                <!-- Quantity -->
+
+                                <div
+                                    class="flex items-center
+                                           justify-between
+                                           mt-6">
+
+
+                                    <div>
+
+                                        <p class="text-xs text-gray-400 mb-2">
+                                            Quantity
+                                        </p>
+
+
+                                        <div
+                                            class="inline-flex items-center
+                                                   border border-gray-200
+                                                   rounded-lg
+                                                   overflow-hidden
+                                                   bg-gray-50">
+
+
+                                            <!-- Decrement -->
+
+                                            <button
+                                                type="button"
+                                                class="decrement
+                                                       w-9 h-9
+                                                       flex items-center
+                                                       justify-center
+                                                       hover:bg-gray-100
+                                                       transition"
+                                                data-id="<%= index %>"
+                                                data-product-id="<%= item.product._id %>"
+                                                data-price="<%= item.product.price %>"
+                                                data-discount="<%= item.product.discount %>"
+                                                aria-label="Decrease quantity">
+
+                                                <i class="ri-subtract-line"></i>
+
+                                            </button>
+
+
+                                            <!-- Quantity -->
+
+                                            <span
+                                                id="quantity-<%= index %>"
+                                                class="w-10 text-center
+                                                       text-sm font-medium">
+
+                                                <%= item.quantity %>
+
+                                            </span>
+
+
+                                            <!-- Increment -->
+
+                                            <button
+                                                type="button"
+                                                class="increment
+                                                       w-9 h-9
+                                                       flex items-center
+                                                       justify-center
+                                                       hover:bg-gray-100
+                                                       transition"
+                                                data-id="<%= index %>"
+                                                data-product-id="<%= item.product._id %>"
+                                                data-price="<%= item.product.price %>"
+                                                data-discount="<%= item.product.discount %>"
+                                                aria-label="Increase quantity">
+
+                                                <i class="ri-add-line"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Item Total -->
+
+                                    <div class="text-right">
+
+                                        <p class="text-xs text-gray-400 mb-2">
+                                            Item Total
+                                        </p>
+
+                                        <p
+                                            id="net-total-<%= index %>"
+                                            class="font-semibold text-gray-900">
+
+                                            ₹<%= (item.product.price - item.product.discount) * item.quantity %>
+
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
-                </div>
-                <div class="flex items-center bg-[<%= item.product.panelcolor %>] justify-between px-5 py-3">
-                    <h4 class="text-lg">Net Total</h4>
-                    <h2 id="net-total-<%= index %>" class="text-lg font-semibold">₹ <%= (item.product.price - item.product.discount) * item.quantity  %></h2>
-                </div>
+
+
+                <% }); %>
+
+
             </div>
-        <% }); %>
-    </div>
-    <div class="w-[60%] bg-white px-8 py-6 rounded-lg shadow-md">
-        <h3 class="text-2xl mb-4 font-semibold">Price Breakdown</h3>
-        <div id="price-breakdown" class="mt-4">
-            <% user.cart.forEach((item, index) => { %>
-                <div id="breakdown-item-<%= index %>">
-                    <div class="flex justify-between mt-2">
-                        <h4 class="w-1/2">Total MRP for <%= item.product.name %> (×
-                            <span id="breakdown-quantity-<%= index %>"><%= item.quantity %></span>
-                            )</h4>
-                        <h4 id="breakdown-price-<%= index %>">₹ <%= item.product.price * item.quantity %></h4>
+
+
+            <!-- ================================================= -->
+            <!-- PRICE SUMMARY                                     -->
+            <!-- ================================================= -->
+
+            <div class="lg:col-span-2">
+
+
+                <div
+                    class="lg:sticky lg:top-24
+                           rounded-2xl
+                           border border-gray-200
+                           bg-white
+                           p-5 sm:p-6
+                           shadow-sm">
+
+
+                    <h2
+                        class="text-xl font-semibold
+                               text-gray-900">
+
+                        Price Summary
+
+                    </h2>
+
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Your order details
+                    </p>
+
+
+                    <!-- Breakdown -->
+
+                    <div
+                        id="price-breakdown"
+                        class="mt-6 space-y-5">
+
+
+                        <% user.cart.forEach((item, index) => { %>
+
+
+                            <div
+                                id="breakdown-item-<%= index %>"
+                                class="pb-5 border-b border-gray-100">
+
+
+                                <p
+                                    class="text-sm font-medium
+                                           text-gray-800 mb-3">
+
+                                    <%= item.product.name %>
+
+                                </p>
+
+
+                                <!-- MRP -->
+
+                                <div
+                                    class="flex justify-between
+                                           text-sm mt-2">
+
+                                    <span class="text-gray-500">
+
+                                        MRP
+                                        (×<span id="breakdown-quantity-<%= index %>">
+                                            <%= item.quantity %>
+                                        </span>)
+
+                                    </span>
+
+
+                                    <span
+                                        id="breakdown-price-<%= index %>"
+                                        class="text-gray-700">
+
+                                        ₹<%= item.product.price * item.quantity %>
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Discount -->
+
+                                <div
+                                    class="flex justify-between
+                                           text-sm mt-2">
+
+                                    <span class="text-gray-500">
+                                        Discount
+                                    </span>
+
+
+                                    <span
+                                        id="breakdown-discount-<%= index %>"
+                                        class="text-green-600">
+
+                                        -₹<%= item.product.discount * item.quantity %>
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Platform Fee -->
+
+                                <div
+                                    class="flex justify-between
+                                           text-sm mt-2">
+
+                                    <span class="text-gray-500">
+                                        Platform Fee
+                                    </span>
+
+                                    <span class="text-gray-700">
+                                        ₹20
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Shipping -->
+
+                                <div
+                                    class="flex justify-between
+                                           text-sm mt-2">
+
+                                    <span class="text-gray-500">
+                                        Shipping
+                                    </span>
+
+                                    <span class="text-green-600">
+                                        FREE
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+
+                        <% }); %>
+
+
                     </div>
-                    <div class="flex justify-between mt-2">
-                        <h4 class="w-1/2">Discount on <%= item.product.name %></h4>
-                        <h4 id="breakdown-discount-<%= index %>">₹ <%= item.product.discount * item.quantity %></h4>
+
+
+                    <!-- Total -->
+
+                    <div
+                        class="flex items-center
+                               justify-between
+                               mt-6">
+
+                        <span
+                            class="text-lg font-semibold
+                                   text-gray-900">
+
+                            Total Amount
+
+                        </span>
+
+
+                        <span
+                            id="total-amount"
+                            class="text-2xl font-bold
+                                   text-gray-900">
+
+                            ₹<%= user.cart.reduce(
+                                (total, item) =>
+                                total +
+                                (
+                                    (item.product.price - item.product.discount)
+                                    * item.quantity
+                                ) + 20,
+                                0
+                            ) %>
+
+                        </span>
+
                     </div>
-                    <div class="flex justify-between mt-2">
-                        <h4 class="w-1/2">Platform Fee for <%= item.product.name %></h4>
-                        <h4>₹ 20</h4>
-                    </div>
-                    <div class="flex justify-between mt-2 border-b pb-2">
-                        <h4 class="w-1/2">Shipping Fee for <%= item.product.name %></h4>
-                        <h4>FREE</h4>
-                    </div>
+
+
+                    <!-- Checkout -->
+
+                    <button
+                        id="checkout-btn"
+                        class="w-full mt-6
+                               bg-black text-white
+                               py-3.5
+                               rounded-xl
+                               text-sm font-semibold
+                               hover:bg-gray-800
+                               transition">
+
+                        Proceed to Checkout
+
+                        <i class="ri-arrow-right-line ml-1"></i>
+
+                    </button>
+
+
+                    <!-- Continue Shopping -->
+
+                    <a
+                        href="/shop"
+                        class="w-full mt-3
+                               flex items-center
+                               justify-center
+                               py-3
+                               rounded-xl
+                               border border-gray-200
+                               text-sm font-medium
+                               text-gray-700
+                               hover:bg-gray-50
+                               transition">
+
+                        Continue Shopping
+
+                    </a>
+
+
                 </div>
-            <% }); %>
+
+            </div>
+
+
         </div>
 
-        <div class="w-full h-[1px] bg-gray-400 mt-6"></div>
 
-        <div class="flex justify-between items-center mt-5">
-            <h3 class="text-2xl font-bold text-gray-800">Total Amount</h3>
-            <h3 id="total-amount" class="text-2xl font-semibold text-green-600">
-                ₹ <%= user.cart.reduce((total, item) => total + ((item.product.price-item.product.discount)*item.quantity + 20), 0) %></h3>
+    <% } else { %>
+
+
+        <!-- ================================================= -->
+        <!-- EMPTY CART                                        -->
+        <!-- ================================================= -->
+
+        <div
+            class="min-h-[450px]
+                   flex flex-col
+                   items-center
+                   justify-center
+                   text-center
+                   rounded-2xl
+                   border border-gray-200
+                   bg-white
+                   px-6">
+
+
+            <div
+                class="w-20 h-20
+                       rounded-full
+                       bg-gray-100
+                       flex items-center
+                       justify-center
+                       mb-6">
+
+                <i
+                    class="ri-shopping-cart-line
+                           text-3xl text-gray-500">
+                </i>
+
+            </div>
+
+
+            <h2
+                class="text-2xl font-semibold
+                       text-gray-900">
+
+                Your cart is empty
+
+            </h2>
+
+
+            <p
+                class="text-gray-500
+                       mt-2
+                       max-w-md">
+
+                Looks like you haven't added anything
+                to your cart yet.
+
+            </p>
+
+
+            <a
+                href="/shop"
+                class="mt-6
+                       inline-flex
+                       items-center
+                       gap-2
+                       bg-black
+                       text-white
+                       px-6 py-3
+                       rounded-xl
+                       text-sm font-semibold
+                       hover:bg-gray-800
+                       transition">
+
+                Start Shopping
+
+                <i class="ri-arrow-right-line"></i>
+
+            </a>
+
         </div>
 
-        <button
-            id="checkout-btn"
-            class="w-full mt-6 bg-blue-600 text-white py-3 rounded-md text-lg font-semibold">
-            Proceed to Checkout
-        </button>
 
-    </div>
+    <% } %>
+
+
 </div>
+
 
 <%- include('./partials/footer') %>
 
+
+<!-- ================================================= -->
+<!-- CART JAVASCRIPT                                   -->
+<!-- ================================================= -->
+
 <script>
+
+
     async function saveQuantity(productId, quantity) {
-            const response = await fetch(`/cart/${productId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    quantity: quantity
-                })
-            });
 
-            if (!response.ok) {
-                throw new Error('Failed to update quantity');
-            }
+        const response = await fetch(`/cart/${productId}`, {
 
-            return response.json();
-    }
-    // Increment Button
-    document.querySelectorAll('.increment').forEach(button => {
-        button.addEventListener('click', async () => {
-            const id = button.getAttribute('data-id');
-            const productId = button.getAttribute('data-product-id');
-            const price = parseInt(button.getAttribute('data-price')) || 0;
-            const discount = parseInt(button.getAttribute('data-discount')) || 0;
-            const quantityElement = document.getElementById(`quantity-${id}`);
-            const netTotalElement = document.getElementById(`net-total-${id}`);
-            const breakdownQuantity = document.getElementById(`breakdown-quantity-${id}`);
-            const breakdownPrice = document.getElementById(`breakdown-price-${id}`);
-            const breakdownDiscount = document.getElementById(`breakdown-discount-${id}`);
+            method: 'PATCH',
 
-            // Increment the quantity
-            let quantity = parseInt(quantityElement.textContent) || 1;
-            quantity += 1;
-            quantityElement.textContent = quantity;
-            breakdownQuantity.textContent = quantity;
+            headers: {
+                'Content-Type': 'application/json'
+            },
 
-            //api call for updating quantity in our database 
-            try {
-                await saveQuantity(productId, quantity);
-            } catch (error) {
-                console.error(error);
-            }
+            body: JSON.stringify({
+                quantity: quantity
+            })
 
-            // Calculate the new net total for this item
-            const itemTotal = (price -discount) * quantity ;  // Platform fee added only once
-            netTotalElement.textContent = `₹ ${itemTotal}`;
-            breakdownPrice.textContent = `₹ ${price * quantity}`
-            breakdownDiscount.textContent = `₹ ${discount * quantity}`;
-
-            // Update the overall total amount
-            updateTotalAmount();
         });
+
+
+        if (!response.ok) {
+            throw new Error('Failed to update quantity');
+        }
+
+
+        return response.json();
+
+    }
+
+
+    // =================================================
+    // INCREMENT
+    // =================================================
+
+    document.querySelectorAll('.increment').forEach(button => {
+
+        button.addEventListener('click', async () => {
+
+
+            const id =
+                button.getAttribute('data-id');
+
+
+            const productId =
+                button.getAttribute('data-product-id');
+
+
+            const price =
+                parseInt(button.getAttribute('data-price')) || 0;
+
+
+            const discount =
+                parseInt(button.getAttribute('data-discount')) || 0;
+
+
+            const quantityElement =
+                document.getElementById(`quantity-${id}`);
+
+
+            const netTotalElement =
+                document.getElementById(`net-total-${id}`);
+
+
+            const breakdownQuantity =
+                document.getElementById(
+                    `breakdown-quantity-${id}`
+                );
+
+
+            const breakdownPrice =
+                document.getElementById(
+                    `breakdown-price-${id}`
+                );
+
+
+            const breakdownDiscount =
+                document.getElementById(
+                    `breakdown-discount-${id}`
+                );
+
+
+            let quantity =
+                parseInt(quantityElement.textContent) || 1;
+
+
+            quantity += 1;
+
+
+            quantityElement.textContent =
+                quantity;
+
+
+            breakdownQuantity.textContent =
+                quantity;
+
+
+            try {
+
+                await saveQuantity(
+                    productId,
+                    quantity
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+
+            const itemTotal =
+                (price - discount) * quantity;
+
+
+            netTotalElement.textContent =
+                `₹${itemTotal}`;
+
+
+            breakdownPrice.textContent =
+                `₹${price * quantity}`;
+
+
+            breakdownDiscount.textContent =
+                `-₹${discount * quantity}`;
+
+
+            updateTotalAmount();
+
+        });
+
     });
 
-    // Decrement Button
+
+    // =================================================
+    // DECREMENT
+    // =================================================
+
     document.querySelectorAll('.decrement').forEach(button => {
+
         button.addEventListener('click', async () => {
-            const id = button.getAttribute('data-id');
-            const productId = button.getAttribute('data-product-id');
-            const price = parseInt(button.getAttribute('data-price')) || 0;
-            const discount = parseInt(button.getAttribute('data-discount')) || 0;
-            const quantityElement = document.getElementById(`quantity-${id}`);
-            const netTotalElement = document.getElementById(`net-total-${id}`);
-            const breakdownQuantity = document.getElementById(`breakdown-quantity-${id}`);
-            const breakdownPrice = document.getElementById(`breakdown-price-${id}`);
-            const breakdownDiscount = document.getElementById(`breakdown-discount-${id}`);
 
-            // Decrement the quantity only if it's greater than 1
-            let quantity = parseInt(quantityElement.textContent) || 1;
+
+            const id =
+                button.getAttribute('data-id');
+
+
+            const productId =
+                button.getAttribute('data-product-id');
+
+
+            const price =
+                parseInt(button.getAttribute('data-price')) || 0;
+
+
+            const discount =
+                parseInt(button.getAttribute('data-discount')) || 0;
+
+
+            const quantityElement =
+                document.getElementById(`quantity-${id}`);
+
+
+            const netTotalElement =
+                document.getElementById(`net-total-${id}`);
+
+
+            const breakdownQuantity =
+                document.getElementById(
+                    `breakdown-quantity-${id}`
+                );
+
+
+            const breakdownPrice =
+                document.getElementById(
+                    `breakdown-price-${id}`
+                );
+
+
+            const breakdownDiscount =
+                document.getElementById(
+                    `breakdown-discount-${id}`
+                );
+
+
+            let quantity =
+                parseInt(quantityElement.textContent) || 1;
+
+
             if (quantity > 1) {
-                quantity -= 1;
-                quantityElement.textContent = quantity;
-                breakdownQuantity.textContent = quantity;
 
-                // Calculate the new net total for this item (adding platform fee only once)
-                const itemTotal = (price - discount) * quantity  ;  // Platform fee added once per item
-                netTotalElement.textContent = `₹ ${itemTotal}`;
-                breakdownPrice.textContent = `₹ ${price * quantity}`
-                breakdownDiscount.textContent = `₹ ${discount * quantity}`;
+                quantity -= 1;
+
+
+                quantityElement.textContent =
+                    quantity;
+
+
+                breakdownQuantity.textContent =
+                    quantity;
+
+
+                const itemTotal =
+                    (price - discount) * quantity;
+
+
+                netTotalElement.textContent =
+                    `₹${itemTotal}`;
+
+
+                breakdownPrice.textContent =
+                    `₹${price * quantity}`;
+
+
+                breakdownDiscount.textContent =
+                    `-₹${discount * quantity}`;
+
 
                 try {
-                    await saveQuantity(productId, quantity);
+
+                    await saveQuantity(
+                        productId,
+                        quantity
+                    );
+
                 } catch (error) {
+
                     console.error(error);
+
                 }
+
             }
 
-            // Update the overall total amount
+
             updateTotalAmount();
+
         });
+
     });
+
+
+    // =================================================
+    // REMOVE ITEM
+    // =================================================
 
     document.querySelectorAll('.remove-item').forEach(button => {
-    button.addEventListener('click', async () => {
 
-        const productId = button.getAttribute('data-product-id');
+        button.addEventListener('click', async () => {
 
-        try {
-            const response = await fetch(`/cart/${productId}`, {
-                method: 'DELETE'
-            });
 
-            if (!response.ok) {
-                throw new Error('Failed to remove item');
+            const productId =
+                button.getAttribute('data-product-id');
+
+
+            try {
+
+                const response =
+                    await fetch(`/cart/${productId}`, {
+
+                        method: 'DELETE'
+
+                    });
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        'Failed to remove item'
+                    );
+
+                }
+
+
+                window.location.reload();
+
+
+            } catch (error) {
+
+                console.error(error);
+
             }
 
-            window.location.reload();
-
-        } catch (error) {
-            console.error(error);
-        }
-    });
-    });
-
-    // Function to update the total amount dynamically
-    function updateTotalAmount() {
-        let totalAmount = 0;
-        document.querySelectorAll('.increment').forEach(button => {
-            const id = button.getAttribute('data-id');
-            const price = parseInt(button.getAttribute('data-price')) || 0;
-            const discount = parseInt(button.getAttribute('data-discount')) || 0;
-            const quantity = parseInt(document.getElementById(`quantity-${id}`).textContent) || 1;
-
-            // Calculate the total for each item with platform fee added once
-            totalAmount += (price - discount ) * quantity + 20;  // Platform fee added once per item
         });
-        document.getElementById('total-amount').textContent = `₹ ${totalAmount}`;
+
+    });
+
+
+    // =================================================
+    // UPDATE TOTAL
+    // =================================================
+
+    function updateTotalAmount() {
+
+
+        let totalAmount = 0;
+
+
+        document.querySelectorAll('.increment')
+            .forEach(button => {
+
+
+                const id =
+                    button.getAttribute('data-id');
+
+
+                const price =
+                    parseInt(
+                        button.getAttribute('data-price')
+                    ) || 0;
+
+
+                const discount =
+                    parseInt(
+                        button.getAttribute('data-discount')
+                    ) || 0;
+
+
+                const quantity =
+                    parseInt(
+                        document.getElementById(
+                            `quantity-${id}`
+                        ).textContent
+                    ) || 1;
+
+
+                totalAmount +=
+                    (price - discount) * quantity + 20;
+
+            });
+
+
+        const totalElement =
+            document.getElementById('total-amount');
+
+
+        if (totalElement) {
+
+            totalElement.textContent =
+                `₹${totalAmount}`;
+
+        }
+
     }
 
-   document.getElementById('checkout-btn').addEventListener('click', () => {
+
+    // =================================================
+    // CHECKOUT
+    // =================================================
+
+    const checkoutButton =
+        document.getElementById('checkout-btn');
+
+
+    if (checkoutButton) {
+
+        checkoutButton.addEventListener('click', () => {
+
             window.location.href = '/checkout';
-    });
-    
+
+        });
+
+    }
+
 </script>

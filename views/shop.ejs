@@ -1,76 +1,654 @@
 <%- include('./partials/header') %>
-    <% if(success.length>0){ %>
-    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
-        <span class="inline-block mt-1 mb-1 text-white">
+
+
+<!-- Success Message -->
+<% if (success.length > 0) { %>
+
+    <div
+        class="fixed top-20 left-1/2 -translate-x-1/2 z-50
+               px-5 py-3 rounded-lg bg-blue-500 shadow-lg">
+
+        <span class="text-white text-sm">
             <%= success %>
         </span>
+
     </div>
-    <% } %>
-    <div class="w-full h-screen flex items-start px-20 py-20">
-        <div class="w-[25%] flex h-screen flex-col items-start">
-            <div class="flex items-center gap-2">
-                <h3>sort by</h3>
-                <form action="/shop">
-                    <select class="border-[1px] px-2 py-1" name="sortby" id="">
-                        <option value="popular">Popular</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </form>
+
+<% } %>
+
+
+<!-- ================= SHOP PAGE ================= -->
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+
+    <div class="flex items-start gap-6 lg:gap-10">
+
+
+        <!-- ================================================= -->
+        <!-- DESKTOP / TABLET SIDEBAR                         -->
+        <!-- ================================================= -->
+
+        <aside class="hidden md:block w-44 lg:w-52 flex-shrink-0">
+
+            <!-- Sort -->
+
+            <div>
+
+                <div class="flex items-center gap-2">
+
+                    <span class="text-sm font-medium text-gray-700">
+                        Sort by
+                    </span>
+
+                    <form action="/shop" method="GET">
+
+                        <select
+                            name="sortby"
+                            onchange="this.form.submit()"
+                            class="text-sm border border-gray-300
+                                   rounded-md px-2 py-1
+                                   bg-white outline-none
+                                   focus:border-black">
+
+                            <option
+                                value="popular"
+                                <%= sortBy === "popular" ? "selected" : "" %>>
+                                Popular
+                            </option>
+
+                            <option
+                                value="newest"
+                                <%= sortBy === "newest" ? "selected" : "" %>>
+                                Newest
+                            </option>
+
+                        </select>
+
+                    </form>
+
+                </div>
+
             </div>
-            <div class="flex flex-col mt-20">
-                <a class="block w-fit mb-2" href="">New Collection</a>
-                <a class="block w-fit mb-2" href="">All Products</a>
-                <a class="block w-fit mb-2" href="">Discounted Products</a>
+
+
+            <!-- Collections -->
+
+            <div class="mt-14">
+
+                <p
+                    class="text-xs font-medium tracking-wider
+                           text-gray-400 uppercase mb-5">
+
+                    Collections
+
+                </p>
+
+
+                <div class="space-y-3">
+
+                    <a
+                        href=""
+                        class="block text-sm text-gray-700
+                               hover:text-black transition">
+
+                        New Collection
+
+                    </a>
+
+                    <a
+                        href=""
+                        class="block text-sm text-gray-700
+                               hover:text-black transition">
+
+                        All Products
+
+                    </a>
+
+                    <a
+                        href=""
+                        class="block text-sm text-gray-700
+                               hover:text-black transition">
+
+                        Discounted Products
+
+                    </a>
+
+                </div>
+
             </div>
-            <div class="mt-32">
-                <a class="block w-fit mb-2" href="">Filter by :</a>
-                <a class="block w-fit mb-2" href="">Availability</a>
-                <a class="block w-fit mb-2" href="">Discount</a>
+
+
+            <!-- Filters -->
+
+            <div class="mt-16">
+
+                <p
+                    class="text-xs font-medium tracking-wider
+                           text-gray-400 uppercase mb-5">
+
+                    Filter by
+
+                </p>
+
+
+                <div class="space-y-3">
+
+                    <a
+                        href=""
+                        class="block text-sm text-gray-700
+                               hover:text-black transition">
+
+                        Availability
+
+                    </a>
+
+                    <a
+                        href=""
+                        class="block text-sm text-gray-700
+                               hover:text-black transition">
+
+                        Discount
+
+                    </a>
+
+                </div>
+
             </div>
-        </div>
-        <div class="w-[75%] flex flex-col gap-5 h-screen">
-            <div class="flex items-start gap-5">
-                <% products.forEach(function(product){ %>
-                    <div class="w-60">
-                        <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                            <img
-                            class="h-[12rem]"
-                            src="/products/image/<%= product._id %>"
-                            alt="<%= product.name %>"
->
+
+        </aside>
+
+
+        <!-- ================================================= -->
+        <!-- MAIN SHOP AREA                                   -->
+        <!-- ================================================= -->
+
+        <main class="flex-1 min-w-0">
+
+
+            <!-- Shop Heading -->
+
+            <div class="mb-6 sm:mb-8">
+
+                <p class="text-sm text-gray-500 mb-1">
+                    Cartinger Store
+                </p>
+
+                <h1
+                    class="text-2xl sm:text-3xl font-semibold
+                           text-gray-900">
+
+                    Shop
+
+                </h1>
+
+                <p class="text-gray-500 mt-2 text-sm sm:text-base">
+
+                    Discover products you'll love.
+
+                </p>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MOBILE CONTROLS                                  -->
+            <!-- ================================================= -->
+
+            <div class="md:hidden space-y-3 mb-6">
+
+
+                <!-- Mobile Sort -->
+
+                <div
+                    class="flex items-center justify-between
+                           border border-gray-200
+                           bg-white rounded-lg
+                           px-4 py-3">
+
+                    <span class="text-sm font-medium text-gray-700">
+                        Sort products
+                    </span>
+
+
+                    <form action="/shop" method="GET">
+
+                        <select
+                            name="sortby"
+                            onchange="this.form.submit()"
+                            class="text-sm bg-transparent
+                                   outline-none font-medium">
+
+                            <option
+                                value="popular"
+                                <%= sortBy === "popular" ? "selected" : "" %>>
+                                Popular
+                            </option>
+
+                            <option
+                                value="newest"
+                                <%= sortBy === "newest" ? "selected" : "" %>>
+                                Newest
+                            </option>
+
+                        </select>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Mobile Filter Button -->
+
+                <button
+                    type="button"
+                    id="mobile-filter-button"
+                    class="w-full flex items-center
+                           justify-between
+                           border border-gray-200
+                           bg-white rounded-lg
+                           px-4 py-3
+                           text-sm font-medium
+                           text-gray-700">
+
+                    <span class="flex items-center gap-2">
+
+                        <i class="ri-equalizer-line text-lg"></i>
+
+                        Filters
+
+                    </span>
+
+
+                    <i
+                        id="filter-arrow"
+                        class="ri-arrow-down-s-line text-lg
+                               transition-transform duration-200">
+                    </i>
+
+                </button>
+
+
+                <!-- Mobile Filter Panel -->
+
+                <div
+                    id="mobile-filter-panel"
+                    class="hidden
+                           border border-gray-200
+                           bg-white rounded-lg
+                           p-5">
+
+
+                    <!-- Collections -->
+
+                    <div>
+
+                        <p
+                            class="text-xs font-medium
+                                   tracking-wider
+                                   text-gray-400
+                                   uppercase mb-4">
+
+                            Collections
+
+                        </p>
+
+
+                        <div class="space-y-3">
+
+                            <a
+                                href=""
+                                class="block text-sm text-gray-700
+                                       hover:text-black transition">
+
+                                New Collection
+
+                            </a>
+
+                            <a
+                                href=""
+                                class="block text-sm text-gray-700
+                                       hover:text-black transition">
+
+                                All Products
+
+                            </a>
+
+                            <a
+                                href=""
+                                class="block text-sm text-gray-700
+                                       hover:text-black transition">
+
+                                Discounted Products
+
+                            </a>
+
                         </div>
-                        <div
-                            class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
-                            <div>
-                                <h3>
-                                    <%= product.name %>
-                                </h3>
-                                <h4>₹ <%= product.price %>
-                                </h4>
-                            </div>
-                            <!-- <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
-                                <i class="ri-add-line"></i>
-                            </a> -->
-                            <form action="/cart/<%= product._id %>" method="POST">
-                                <button
-                                    type="submit"
-                                    class="w-7 h-7 flex items-center justify-center rounded-full bg-white">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </form>
-                        </div>
+
                     </div>
-                    <% }) %>
+
+
+                    <!-- Filter By -->
+
+                    <div class="mt-6 pt-5 border-t border-gray-100">
+
+                        <p
+                            class="text-xs font-medium
+                                   tracking-wider
+                                   text-gray-400
+                                   uppercase mb-4">
+
+                            Filter by
+
+                        </p>
+
+
+                        <div class="space-y-3">
+
+                            <a
+                                href=""
+                                class="block text-sm text-gray-700
+                                       hover:text-black transition">
+
+                                Availability
+
+                            </a>
+
+                            <a
+                                href=""
+                                class="block text-sm text-gray-700
+                                       hover:text-black transition">
+
+                                Discount
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-        </div>
+
+
+            <!-- ================================================= -->
+            <!-- PRODUCTS                                         -->
+            <!-- ================================================= -->
+
+            <% if (products && products.length > 0) { %>
+
+
+                <div
+                    class="grid grid-cols-1
+                           sm:grid-cols-2
+                           lg:grid-cols-3
+                           2xl:grid-cols-4
+                           gap-5 sm:gap-6">
+
+
+                    <% products.forEach(function(product) { %>
+
+
+                        <!-- Product Card -->
+
+                        <div
+                            class="group w-full overflow-hidden
+                                   rounded-xl
+                                   border border-gray-200
+                                   bg-white
+                                   hover:-translate-y-1
+                                   hover:shadow-xl
+                                   transition-all duration-300">
+
+
+                            <!-- Product Image -->
+
+                            <div
+                                class="relative w-full
+                                       h-60 sm:h-56
+                                       flex items-center justify-center
+                                       bg-[<%= product.bgcolor %>]
+                                       overflow-hidden">
+
+
+                                <!-- Discount Badge -->
+
+                                <% if (product.discount && product.discount > 0) { %>
+
+                                    <span
+                                        class="absolute top-3 left-3 z-10
+                                               bg-red-500 text-white
+                                               text-xs font-medium
+                                               px-2.5 py-1
+                                               rounded-full">
+
+                                        ₹<%= product.discount %> OFF
+
+                                    </span>
+
+                                <% } %>
+
+
+                                <!-- Product Image -->
+
+                                <img
+                                    src="/products/image/<%= product._id %>"
+                                    alt="<%= product.name %>"
+                                    class="max-h-[13rem]
+                                           max-w-[90%]
+                                           w-auto
+                                           h-auto
+                                           object-contain
+                                           group-hover:scale-105
+                                           transition-transform
+                                           duration-300">
+
+
+                            </div>
+
+
+                            <!-- Product Details -->
+
+                            <div
+                                class="flex items-center justify-between
+                                       px-4 py-4
+                                       bg-[<%= product.panelcolor %>]
+                                       text-[<%= product.textcolor %>]">
+
+
+                                <!-- Name + Price -->
+
+                                <div class="min-w-0">
+
+                                    <h3
+                                        class="font-medium text-sm
+                                               truncate">
+
+                                        <%= product.name %>
+
+                                    </h3>
+
+
+                                    <div
+                                        class="flex items-center
+                                               gap-2 mt-1">
+
+
+                                        <!-- Final Price -->
+
+                                        <h4 class="font-semibold">
+
+                                            ₹<%= product.price - product.discount %>
+
+                                        </h4>
+
+
+                                        <!-- Original Price -->
+
+                                        <% if (product.discount && product.discount > 0) { %>
+
+                                            <span
+                                                class="text-xs opacity-60
+                                                       line-through">
+
+                                                ₹<%= product.price %>
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Add To Cart -->
+
+                                <form
+                                    action="/cart/<%= product._id %>"
+                                    method="POST"
+                                    class="flex-shrink-0 ml-3">
+
+                                    <button
+                                        type="submit"
+                                        aria-label="Add <%= product.name %> to cart"
+                                        class="w-9 h-9
+                                               flex items-center
+                                               justify-center
+                                               rounded-full
+                                               bg-white
+                                               text-black
+                                               shadow-sm
+                                               hover:scale-110
+                                               hover:shadow-md
+                                               transition">
+
+                                        <i
+                                            class="ri-add-line text-lg">
+                                        </i>
+
+                                    </button>
+
+                                </form>
+
+
+                            </div>
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <!-- ================================================= -->
+                <!-- EMPTY STATE                                      -->
+                <!-- ================================================= -->
+
+                <div
+                    class="min-h-[350px]
+                           flex flex-col
+                           items-center
+                           justify-center
+                           text-center">
+
+                    <div
+                        class="w-16 h-16
+                               rounded-full
+                               bg-gray-100
+                               flex items-center
+                               justify-center
+                               text-2xl mb-4">
+
+                        🛍️
+
+                    </div>
+
+
+                    <h2
+                        class="text-xl font-semibold
+                               text-gray-900">
+
+                        No products available
+
+                    </h2>
+
+
+                    <p class="text-gray-500 mt-2">
+
+                        Check back later for new products.
+
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+
+        </main>
+
     </div>
-    <%- include('./partials/footer') %>
+
+</div>
+
+
+<%- include('./partials/footer') %>
+
+
+<!-- ================================================= -->
+<!-- MOBILE FILTER SCRIPT                              -->
+<!-- ================================================= -->
+
 <script>
+
+    const filterButton =
+        document.getElementById("mobile-filter-button");
+
+    const filterPanel =
+        document.getElementById("mobile-filter-panel");
+
+    const filterArrow =
+        document.getElementById("filter-arrow");
+
+
+    if (filterButton && filterPanel) {
+
+        filterButton.addEventListener("click", () => {
+
+            filterPanel.classList.toggle("hidden");
+
+            if (filterArrow) {
+
+                filterArrow.classList.toggle(
+                    "rotate-180"
+                );
+
+            }
+
+        });
+
+    }
+
+
+    // Hide success message automatically
+
     setTimeout(() => {
-        const message = document.querySelector('.bg-blue-500');
+
+        const message =
+            document.querySelector(".bg-blue-500");
 
         if (message) {
-            message.style.display = 'none';
+
+            message.style.display = "none";
+
         }
+
     }, 2000);
+
 </script>

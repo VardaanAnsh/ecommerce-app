@@ -1,0 +1,95 @@
+<%- include('./partials/header') %>
+
+<div class="min-h-screen bg-gray-50 px-6 py-10">
+    <div class="max-w-3xl mx-auto">
+
+        <!-- Back -->
+        <a href="/account"
+           class="inline-block mb-6 text-sm text-gray-600 hover:text-black transition">
+            ← Back to Account
+        </a>
+
+        <!-- Heading -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-gray-900">
+                My Profile
+            </h1>
+
+            <p class="mt-2 text-gray-500">
+                View your account information.
+            </p>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+
+            <!-- Profile Header -->
+            <div class="px-6 py-6 border-b border-gray-100 flex items-center gap-4">
+
+                <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
+                    👤
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-medium text-gray-900">
+                        <%= user.fullname %>
+                    </h2>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        <%= user.email %>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Profile Details -->
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">
+                        Full Name
+                    </p>
+
+                    <p class="text-base font-medium text-gray-900">
+                        <%= user.fullname %>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">
+                        Email Address
+                    </p>
+
+                    <p class="text-base font-medium text-gray-900">
+                        <%= user.email %>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">
+                        Phone Number
+                    </p>
+
+                    <p class="text-base font-medium text-gray-900">
+                        <%= user.contact || "Not added" %>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">
+                        Account Role
+                    </p>
+
+                    <p class="text-base font-medium text-gray-900 capitalize">
+                        <%= user.role || "user" %>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

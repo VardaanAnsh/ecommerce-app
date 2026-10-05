@@ -32,25 +32,51 @@ router.get("/shop", isLoggedIn, async (req, res) => {
   console.log("SHOP ROUTE HIT");
 
   try {
-    const cacheKey = "products:all";
+    const sortBy = req.query.sortby || "popular";
+
+    let sortOption = {};
+
+    if (sortBy === "newest") {
+      sortOption = { _id: -1 };
+    } else {
+      // Keep the existing/default product order for now.
+      sortOption = { _id: 1 };
+    }
+
+    const cacheKey = `products:${sortBy}`;
 
     const cachedProducts = await redisClient.get(cacheKey);
 
     if (cachedProducts) {
-      console.log("CACHE HIT");
+      console.log("CACHE HIT:", cacheKey);
 
       const products = JSON.parse(cachedProducts);
 
-      return res.render("shop", { products });
+      return res.render("shop", {
+        products,
+        sortBy,
+      });
     }
 
-    console.log("CACHE MISS");
+    console.log("CACHE MISS:", cacheKey);
 
-    const products = await productModel.find({}).select("-image").lean();
+    const products = await productModel
+      .find({})
+      .select("-image")
+      .sort(sortOption)
+      .lean();
 
-    await redisClient.setEx(cacheKey, 60, JSON.stringify(products));
+    await redisClient.setEx(
+      cacheKey,
+      60,
+      JSON.stringify(products)
+    );
 
-    res.render("shop", { products });
+    res.render("shop", {
+      products,
+      sortBy,
+    });
+
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
@@ -109,6 +135,25 @@ router.get("/account", isLoggedIn, async function (req, res) {
     res.status(500).send("Something went wrong");
   }
 });
+
+router.get("/profile", isLoggedIn, async function (req, res) {
+  try {
+    const user = await userModel
+      .findById(req.user._id)
+      .select("-password");
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    res.render("profile", { user });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Something went wrong");
+  }
+});
+
 
 // router.get('/addtocart/:id',isLoggedIn, async function(req, res){
 //    let user = await userModel.findOne({email : req.user.email});

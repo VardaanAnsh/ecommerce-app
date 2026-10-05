@@ -118,6 +118,6 @@ module.exports.loginUser = async (req, res) => {
 };
 
 module.exports.logout = function(req, res) {
-    res.cookie('token', '');
+    res.clearCookie('token');
     res.redirect('/');
 };

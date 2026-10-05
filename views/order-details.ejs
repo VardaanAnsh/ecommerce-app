@@ -1,39 +1,51 @@
 <%- include('./partials/header') %>
 
-<div class="w-full min-h-screen bg-gray-50 px-6 md:px-12 lg:px-20 py-12">
+<div class="w-full min-h-screen bg-gray-50 px-5 sm:px-8 md:px-12 lg:px-20 py-8 md:py-12">
 
     <div class="max-w-6xl mx-auto">
 
         <!-- Back -->
+
         <a href="/orders"
-           class="text-blue-600 hover:underline text-sm">
-            ← Back to Orders
+           class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition">
+
+            <i class="ri-arrow-left-line"></i>
+
+            Back to Orders
+
         </a>
 
-        <!-- Header -->
-        <div class="mt-6 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <!-- Order Header -->
+
+        <div class="mt-6 bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
                 <div>
-                    <p class="text-sm text-gray-500">
+
+                    <p class="text-xs uppercase tracking-wide text-gray-400">
                         Order ID
                     </p>
 
-                    <h1 class="text-2xl font-semibold text-gray-900 mt-1">
+                    <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 mt-1 break-all">
                         #<%= order._id %>
                     </h1>
 
-                    <p class="text-gray-500 mt-2">
+                    <p class="text-sm text-gray-500 mt-2">
                         Placed on <%= order.createdAt.toLocaleDateString() %>
                     </p>
+
                 </div>
 
-                <div>
-                    <span class="px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-medium capitalize">
-                        <%= order.status %>
-                    </span>
-                </div>
+
+                <span class="inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm capitalize">
+
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+
+                    <%= order.status %>
+
+                </span>
 
             </div>
 
@@ -41,77 +53,120 @@
 
 
         <!-- Order Status -->
-        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mt-6">
 
-            <h2 class="text-xl font-semibold text-gray-900 mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm mt-6">
+
+            <h2 class="text-xl font-semibold text-gray-900">
                 Order Status
             </h2>
 
-            <div class="grid grid-cols-4 gap-4">
+            <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
+
+                <!-- Placed -->
 
                 <div class="text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold">
-                        ✓
+
+                    <div class="w-11 h-11 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+
+                        <i class="ri-check-line text-xl"></i>
+
                     </div>
 
-                    <p class="font-medium mt-3">
+                    <p class="font-medium text-gray-900 mt-3">
                         Order Placed
                     </p>
 
-                    <p class="text-sm text-gray-500 mt-1">
+                    <p class="text-xs text-gray-500 mt-1">
                         <%= order.createdAt.toLocaleDateString() %>
                     </p>
+
                 </div>
 
 
+                <!-- Confirmed -->
+
                 <div class="text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full
+
+                    <div class="w-11 h-11 mx-auto rounded-full
                         <%= ['confirmed','shipped','delivered'].includes(order.status)
                             ? 'bg-green-100 text-green-600'
                             : 'bg-gray-100 text-gray-400' %>
-                        flex items-center justify-center font-semibold">
+                        flex items-center justify-center">
 
-                        <%= ['confirmed','shipped','delivered'].includes(order.status) ? '✓' : '2' %>
+                        <% if (['confirmed','shipped','delivered'].includes(order.status)) { %>
+
+                            <i class="ri-check-line text-xl"></i>
+
+                        <% } else { %>
+
+                            <span>2</span>
+
+                        <% } %>
 
                     </div>
 
-                    <p class="font-medium mt-3">
+                    <p class="font-medium text-gray-900 mt-3">
                         Confirmed
                     </p>
+
                 </div>
 
 
+                <!-- Shipped -->
+
                 <div class="text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full
+
+                    <div class="w-11 h-11 mx-auto rounded-full
                         <%= ['shipped','delivered'].includes(order.status)
                             ? 'bg-green-100 text-green-600'
                             : 'bg-gray-100 text-gray-400' %>
-                        flex items-center justify-center font-semibold">
+                        flex items-center justify-center">
 
-                        <%= ['shipped','delivered'].includes(order.status) ? '✓' : '3' %>
+                        <% if (['shipped','delivered'].includes(order.status)) { %>
+
+                            <i class="ri-check-line text-xl"></i>
+
+                        <% } else { %>
+
+                            <span>3</span>
+
+                        <% } %>
 
                     </div>
 
-                    <p class="font-medium mt-3">
+                    <p class="font-medium text-gray-900 mt-3">
                         Shipped
                     </p>
+
                 </div>
 
 
+                <!-- Delivered -->
+
                 <div class="text-center">
-                    <div class="w-10 h-10 mx-auto rounded-full
+
+                    <div class="w-11 h-11 mx-auto rounded-full
                         <%= order.status === 'delivered'
                             ? 'bg-green-100 text-green-600'
                             : 'bg-gray-100 text-gray-400' %>
-                        flex items-center justify-center font-semibold">
+                        flex items-center justify-center">
 
-                        <%= order.status === 'delivered' ? '✓' : '4' %>
+                        <% if (order.status === 'delivered') { %>
+
+                            <i class="ri-check-line text-xl"></i>
+
+                        <% } else { %>
+
+                            <span>4</span>
+
+                        <% } %>
 
                     </div>
 
-                    <p class="font-medium mt-3">
+                    <p class="font-medium text-gray-900 mt-3">
                         Delivered
                     </p>
+
                 </div>
 
             </div>
@@ -120,45 +175,70 @@
 
 
         <!-- Main Content -->
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
 
+
             <!-- Left -->
+
             <div class="lg:col-span-2 space-y-6">
 
+
                 <!-- Delivery Address -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-                    <h2 class="text-xl font-semibold text-gray-900">
-                        Delivery Address
-                    </h2>
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm">
 
-                    <div class="mt-5 border border-gray-200 rounded-lg p-5">
+                    <div class="flex items-center gap-3">
 
-                        <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+
+                            <i class="ri-map-pin-line text-xl"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="text-xl font-semibold text-gray-900">
+                                Delivery Address
+                            </h2>
+
+                            <p class="text-sm text-gray-500">
+                                Shipping information
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-5 border border-gray-200 rounded-xl p-5">
+
+                        <div class="flex flex-wrap items-center gap-3">
 
                             <h3 class="font-semibold text-gray-900">
                                 <%= order.shippingAddress.name %>
                             </h3>
 
-                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
                                 <%= order.shippingAddress.label %>
                             </span>
 
                         </div>
 
-                        <p class="text-gray-600 mt-3">
+                        <p class="text-sm text-gray-600 mt-4">
                             <%= order.shippingAddress.addressLine %>
                         </p>
 
-                        <p class="text-gray-600">
+                        <p class="text-sm text-gray-600">
                             <%= order.shippingAddress.city %>,
                             <%= order.shippingAddress.state %>
                             -
                             <%= order.shippingAddress.pincode %>
                         </p>
 
-                        <p class="text-gray-600 mt-2">
-                            Phone: <%= order.shippingAddress.phone %>
+                        <p class="text-sm text-gray-600 mt-2">
+                            <span class="font-medium text-gray-800">Phone:</span>
+                            <%= order.shippingAddress.phone %>
                         </p>
 
                     </div>
@@ -167,47 +247,73 @@
 
 
                 <!-- Items -->
-                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-                    <h2 class="text-xl font-semibold text-gray-900 mb-5">
-                        Items in this Order
-                    </h2>
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm">
 
-                    <div class="flex flex-col">
+                    <div class="flex items-center gap-3 mb-5">
+
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+
+                            <i class="ri-shopping-bag-3-line text-xl"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="text-xl font-semibold text-gray-900">
+                                Items in this Order
+                            </h2>
+
+                            <p class="text-sm text-gray-500">
+                                Products included in your purchase
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
 
                         <% order.items.forEach((item, index) => { %>
 
-                            <div class="flex justify-between gap-6 py-5
-                                <%= index !== order.items.length - 1 ? 'border-b border-gray-200' : '' %>">
+                            <div class="py-5
+                                <%= index !== order.items.length - 1
+                                    ? 'border-b border-gray-200'
+                                    : '' %>">
 
-                                <div>
+                                <div class="flex items-start justify-between gap-5">
 
-                                    <h3 class="font-medium text-gray-900">
-                                        <%= item.name %>
-                                    </h3>
+                                    <div class="min-w-0">
 
-                                    <p class="text-sm text-gray-500 mt-2">
-                                        ₹ <%= item.price %>
-                                        ×
-                                        <%= item.quantity %>
-                                    </p>
+                                        <h3 class="font-medium text-gray-900">
+                                            <%= item.name %>
+                                        </h3>
 
-                                    <% if (item.discount > 0) { %>
-
-                                        <p class="text-sm text-green-600 mt-1">
-                                            Discount: ₹ <%= item.discount %> per item
+                                        <p class="text-sm text-gray-500 mt-2">
+                                            ₹ <%= item.price %>
+                                            ×
+                                            <%= item.quantity %>
                                         </p>
 
-                                    <% } %>
+                                        <% if (item.discount > 0) { %>
 
-                                </div>
+                                            <p class="text-sm text-green-600 mt-1">
+                                                Discount: ₹ <%= item.discount %> per item
+                                            </p>
+
+                                        <% } %>
+
+                                    </div>
 
 
-                                <div class="text-right">
+                                    <div class="text-right whitespace-nowrap">
 
-                                    <p class="font-semibold text-gray-900">
-                                        ₹ <%= (item.price - item.discount) * item.quantity %>
-                                    </p>
+                                        <p class="font-semibold text-gray-900">
+                                            ₹ <%= (item.price - item.discount) * item.quantity %>
+                                        </p>
+
+                                    </div>
 
                                 </div>
 
@@ -222,14 +328,26 @@
             </div>
 
 
-            <!-- Right -->
+            <!-- Right / Price -->
+
             <div>
 
-                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm sticky top-6">
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm lg:sticky lg:top-6">
 
-                    <h2 class="text-xl font-semibold text-gray-900">
-                        Price Details
-                    </h2>
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
+
+                            <i class="ri-file-list-3-line text-xl"></i>
+
+                        </div>
+
+                        <h2 class="text-xl font-semibold text-gray-900">
+                            Price Details
+                        </h2>
+
+                    </div>
+
 
                     <%
                         let subtotal = 0;
@@ -247,29 +365,47 @@
 
                     <div class="mt-6 space-y-4">
 
-                        <div class="flex justify-between text-gray-600">
+                        <div class="flex justify-between text-sm text-gray-600">
+
                             <span>Subtotal</span>
-                            <span>₹ <%= subtotal %></span>
+
+                            <span>
+                                ₹ <%= subtotal %>
+                            </span>
+
                         </div>
 
 
-                        <div class="flex justify-between text-green-600">
+                        <div class="flex justify-between text-sm text-green-600">
+
                             <span>Discount</span>
-                            <span>- ₹ <%= totalDiscount %></span>
+
+                            <span>
+                                - ₹ <%= totalDiscount %>
+                            </span>
+
                         </div>
 
 
-                        <div class="flex justify-between text-gray-600">
+                        <div class="flex justify-between text-sm text-gray-600">
+
                             <span>Platform Fee</span>
-                            <span>₹ <%= platformFee %></span>
+
+                            <span>
+                                ₹ <%= platformFee %>
+                            </span>
+
                         </div>
 
 
-                        <div class="flex justify-between text-gray-600">
+                        <div class="flex justify-between text-sm text-gray-600">
+
                             <span>Shipping</span>
+
                             <span class="text-green-600">
                                 FREE
                             </span>
+
                         </div>
 
                     </div>
@@ -277,13 +413,13 @@
 
                     <div class="border-t border-gray-200 mt-6 pt-5">
 
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center gap-4">
 
-                            <span class="text-lg font-semibold text-gray-900">
+                            <span class="font-semibold text-gray-900">
                                 Total Amount
                             </span>
 
-                            <span class="text-lg font-semibold text-green-600">
+                            <span class="text-xl font-semibold text-gray-900">
                                 ₹ <%= order.totalAmount %>
                             </span>
 
@@ -299,16 +435,25 @@
 
 
         <!-- Actions -->
-        <div class="mt-6 flex flex-wrap gap-4">
+
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
 
             <a href="/shop"
-               class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition font-medium">
+
                 Continue Shopping
+
+                <i class="ri-arrow-right-line"></i>
+
             </a>
 
             <a href="/orders"
-               class="px-6 py-3 border border-gray-300 bg-white rounded-lg hover:bg-gray-50 transition font-medium">
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 bg-white rounded-lg hover:bg-gray-50 transition font-medium">
+
+                <i class="ri-list-check"></i>
+
                 View All Orders
+
             </a>
 
         </div>

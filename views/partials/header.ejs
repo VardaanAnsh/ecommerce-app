@@ -4,22 +4,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <title>Cartinger</title>
+
+    <!-- Remix Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+        rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Keep scrolling but hide the browser scrollbar */
+        html {
+            scrollbar-width: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            scrollbar-width: none;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 
-<body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between   px-5 py-4">
-        <h3 class="text-xl font-light">Scatch</h3>
-        <%  var loggedin = typeof loggedin!= "undefined"  ? loggedin : true   %>
-        <% if(loggedin) { %>
-            <div  class="flex gap-7 font-light "  >
-                <a href="/shop">Shop</a>
-                <a href="/cart">Cart</a>
-                <a href="/account">Account</a>
-                <a class="text-red-600" href="/users/logout">Logout</a>
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 w-full bg-white border-b border-gray-100">
+
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+
+            <div class="h-16 flex items-center justify-between">
+
+                <!-- Brand -->
+                <a
+                    href="/"
+                    class="text-xl font-semibold tracking-tight text-gray-900
+                           hover:opacity-70 transition">
+
+                    Cartinger
+
+                </a>
+
+
+                <% if (loggedin) { %>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex items-center gap-7 text-sm">
+
+                        <a
+                            href="/shop"
+                            class="text-gray-600 hover:text-black transition">
+
+                            Shop
+
+                        </a>
+
+                        <a
+                            href="/cart"
+                            class="text-gray-600 hover:text-black transition">
+
+                            Cart
+
+                        </a>
+
+                        <a
+                            href="/account"
+                            class="text-gray-600 hover:text-black transition">
+
+                            Account
+
+                        </a>
+
+                        <a
+                            href="/users/logout"
+                            class="text-red-500 hover:text-red-600 transition">
+
+                            Logout
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Mobile Menu Button -->
+                    <button
+                        id="mobile-menu-button"
+                        type="button"
+                        class="md:hidden w-10 h-10 flex items-center justify-center
+                               rounded-lg hover:bg-gray-100 transition"
+                        aria-label="Open menu">
+
+                        <i class="ri-menu-line text-xl"></i>
+
+                    </button>
+
+                <% } %>
+
             </div>
+
+        </div>
+
+
+        <% if (loggedin) { %>
+
+            <!-- Mobile Navigation -->
+            <div
+                id="mobile-menu"
+                class="hidden md:hidden border-t border-gray-100 bg-white">
+
+                <div class="max-w-7xl mx-auto px-5 py-4 space-y-1">
+
+                    <a
+                        href="/shop"
+                        class="flex items-center gap-3 px-3 py-3
+                               rounded-lg text-gray-700
+                               hover:bg-gray-50 transition">
+
+                        <i class="ri-store-2-line text-lg"></i>
+
+                        <span>Shop</span>
+
+                    </a>
+
+
+                    <a
+                        href="/cart"
+                        class="flex items-center gap-3 px-3 py-3
+                               rounded-lg text-gray-700
+                               hover:bg-gray-50 transition">
+
+                        <i class="ri-shopping-cart-line text-lg"></i>
+
+                        <span>Cart</span>
+
+                    </a>
+
+
+                    <a
+                        href="/account"
+                        class="flex items-center gap-3 px-3 py-3
+                               rounded-lg text-gray-700
+                               hover:bg-gray-50 transition">
+
+                        <i class="ri-user-line text-lg"></i>
+
+                        <span>Account</span>
+
+                    </a>
+
+
+                    <a
+                        href="/users/logout"
+                        class="flex items-center gap-3 px-3 py-3
+                               rounded-lg text-red-500
+                               hover:bg-red-50 transition">
+
+                        <i class="ri-logout-box-r-line text-lg"></i>
+
+                        <span>Logout</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
         <% } %>
-        
+
     </nav>
+
+
+    <!-- Mobile Menu Script -->
+
+    <script>
+
+        const mobileMenuButton =
+            document.getElementById("mobile-menu-button");
+
+        const mobileMenu =
+            document.getElementById("mobile-menu");
+
+
+        if (mobileMenuButton && mobileMenu) {
+
+            mobileMenuButton.addEventListener("click", () => {
+
+                mobileMenu.classList.toggle("hidden");
+
+                const icon =
+                    mobileMenuButton.querySelector("i");
+
+                if (mobileMenu.classList.contains("hidden")) {
+
+                    icon.className = "ri-menu-line text-xl";
+
+                } else {
+
+                    icon.className = "ri-close-line text-xl";
+
+                }
+
+            });
+
+        }
+
+    </script>

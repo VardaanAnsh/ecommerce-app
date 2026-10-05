@@ -1,98 +1,200 @@
 <%- include('./partials/header') %>
 
-<div class="w-full min-h-screen px-20 py-16">
+<div class="w-full min-h-screen bg-gray-50 px-5 sm:px-8 md:px-12 lg:px-20 py-8 md:py-12">
 
-    <a href="/account"
-       class="text-blue-600 hover:underline text-sm gap-4">
-        ← Back to Account
-    </a>
-    <br>
-    <h1 class="text-3xl font-semibold mb-8">
-        My Orders
-    </h1>
+    <div class="max-w-6xl mx-auto">
 
-    <% if (orders.length === 0) { %>
+        <!-- Header -->
 
-        <p class="text-gray-500">
-            You haven't placed any orders yet.
-        </p>
+        <div class="mb-8">
 
-    <% } else { %>
+            <a href="/account"
+               class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition">
 
-        <div class="flex flex-col gap-6">
+                <i class="ri-arrow-left-line"></i>
 
-            <% orders.forEach(order => { %>
+                Back to Account
 
-                <div class="border rounded-lg p-6 shadow-sm">
+            </a>
 
-                    <div class="flex justify-between mb-4">
+            <div class="mt-6">
 
-                        <div>
-                            <h2 class="text-xl font-semibold">
-                                Order #<%= order._id %>
-                            </h2>
+                <p class="text-sm text-gray-500 mb-2">
+                    Account
+                </p>
 
-                            <p class="text-gray-500">
-                                <%= order.createdAt.toLocaleDateString() %>
-                            </p>
-                        </div>
+                <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">
+                    My Orders
+                </h1>
 
-                        <div>
-                            <span class="px-3 py-1 rounded-full bg-gray-100">
-                                <%= order.status %>
-                            </span>
-                        </div>
+                <p class="text-gray-500 mt-2">
+                    View your order history and track your purchases
+                </p>
 
-                    </div>
-
-                    <% order.items.forEach(item => { %>
-
-                        <div class="flex justify-between border-t py-3">
-
-                            <div>
-                                <h3 class="font-medium">
-                                    <%= item.name %>
-                                </h3>
-
-                                <p class="text-gray-500">
-                                    ₹ <%= item.price %> × <%= item.quantity %>
-                                </p>
-                            </div>
-
-                            <div>
-                                ₹ <%= (item.price * item.quantity) - item.discount %>
-                            </div>
-
-                        </div>
-
-                    <% }) %>
-
-                    <div class="border-t pt-4 mt-2 flex justify-between">
-
-                        <h3 class="font-semibold">
-                            Total Amount
-                        </h3>
-
-                        <h3 class="font-semibold text-green-600">
-                            ₹ <%= order.totalAmount %>
-                        </h3>
-
-                    </div>
-
-                    <div class="mt-5 flex justify-end">
-                    <a href="/orders/<%= order._id %>"
-                    class="text-blue-600 hover:underline text-sm">
-                        View Details →
-                    </a>
-                </div>
-
-                </div>
-
-            <% }) %>
+            </div>
 
         </div>
 
-    <% } %>
+
+        <% if (orders.length === 0) { %>
+
+            <!-- Empty State -->
+
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-10 md:p-16 text-center">
+
+                <div class="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center">
+
+                    <i class="ri-shopping-bag-3-line text-2xl text-gray-400"></i>
+
+                </div>
+
+                <h2 class="text-xl font-semibold text-gray-900 mt-5">
+                    No orders yet
+                </h2>
+
+                <p class="text-gray-500 mt-2">
+                    You haven't placed any orders yet.
+                </p>
+
+                <a href="/shop"
+                   class="inline-flex items-center gap-2 mt-6 bg-black text-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+
+                    Start Shopping
+
+                    <i class="ri-arrow-right-line"></i>
+
+                </a>
+
+            </div>
+
+
+        <% } else { %>
+
+            <!-- Orders -->
+
+            <div class="space-y-5">
+
+                <% orders.forEach(order => { %>
+
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+
+
+                        <!-- Order Header -->
+
+                        <div class="p-5 sm:p-6 border-b border-gray-100">
+
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+                                <div>
+
+                                    <p class="text-xs uppercase tracking-wide text-gray-400">
+                                        Order
+                                    </p>
+
+                                    <h2 class="text-base sm:text-lg font-semibold text-gray-900 mt-1 break-all">
+                                        #<%= order._id %>
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Placed on <%= order.createdAt.toLocaleDateString() %>
+                                    </p>
+
+                                </div>
+
+
+                                <!-- Status -->
+
+                                <span class="inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm capitalize">
+
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+
+                                    <%= order.status %>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Order Items -->
+
+                        <div class="px-5 sm:px-6">
+
+                            <% order.items.forEach(item => { %>
+
+                                <div class="py-4 border-b border-gray-100 last:border-b-0">
+
+                                    <div class="flex items-start justify-between gap-5">
+
+                                        <div class="min-w-0">
+
+                                            <h3 class="font-medium text-gray-900">
+                                                <%= item.name %>
+                                            </h3>
+
+                                            <p class="text-sm text-gray-500 mt-1">
+                                                ₹ <%= item.price %> × <%= item.quantity %>
+                                            </p>
+
+                                        </div>
+
+                                        <p class="font-medium text-gray-900 whitespace-nowrap">
+
+                                            ₹ <%= (item.price * item.quantity) - item.discount %>
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            <% }) %>
+
+                        </div>
+
+
+                        <!-- Order Footer -->
+
+                        <div class="p-5 sm:p-6 bg-gray-50">
+
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+                                <div>
+
+                                    <p class="text-sm text-gray-500">
+                                        Total Amount
+                                    </p>
+
+                                    <p class="text-xl font-semibold text-gray-900 mt-1">
+                                        ₹ <%= order.totalAmount %>
+                                    </p>
+
+                                </div>
+
+
+                                <a href="/orders/<%= order._id %>"
+                                   class="inline-flex items-center justify-center gap-2 bg-black text-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+
+                                    View Details
+
+                                    <i class="ri-arrow-right-line"></i>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </div>
 
 </div>
 

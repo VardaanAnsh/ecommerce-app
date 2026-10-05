@@ -16,7 +16,7 @@
                 </p>
             </div>
 
-            <a href="/addresses"
+            <a href="/addresses?returnTo=<%= returnTo %>"
                class="text-blue-600 hover:underline">
                 ← Back to Addresses
             </a>
@@ -183,7 +183,7 @@
                     </button>
 
                     <a
-                        href="/addresses"
+                        href="/addresses?returnTo=<%= returnTo %>"
                         class="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition">
                         Cancel
                     </a>
@@ -230,7 +230,7 @@
                 );
             }
 
-            window.location.href = '/addresses';
+            window.location.href = '/addresses?returnTo=<%= returnTo %>';
 
         } catch (error) {
 

@@ -43,23 +43,9 @@ app.use(flash());
 
 // Make flash messages available to all views
 app.use((req, res, next) => {
-  
-    // if (req.path.startsWith('/cart') || req.path === '/shop') {
-    // console.log(
-    //     `${req.method} ${req.path} | ${INSTANCE} | session: ${req.sessionID}`
-    // );
-    // }
-
-    // const success = req.flash('success');
-
-    // console.log(
-    //     `FLASH CHECK - ${INSTANCE}:`,
-    //     success
-    // );
-
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-
+    res.locals.loggedin = false;
     next();
 });
 

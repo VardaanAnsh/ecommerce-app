@@ -29,6 +29,8 @@ module.exports = async function (req, res, next) {
 
         req.user = user;
 
+        res.locals.loggedin = true;
+
         next();
 
     } catch (err) {

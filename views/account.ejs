@@ -1,301 +1,376 @@
 <%- include('./partials/header') %>
 
-<div class="w-full min-h-screen bg-gray-50 px-6 md:px-12 lg:px-20 py-12">
+<div class="w-full min-h-screen bg-gray-50 px-5 sm:px-8 md:px-12 lg:px-20 py-8 md:py-12">
 
-    <!-- Header -->
+    <div class="max-w-7xl mx-auto">
 
-    <div class="max-w-7xl mx-auto mb-10">
+        <!-- Page Header -->
 
-        <h1 class="text-4xl font-semibold text-gray-900">
-            My Account
-        </h1>
+        <div class="mb-8 md:mb-10">
 
-        <p class="text-gray-500 mt-2 text-lg">
-            Hello, <%= user.fullname %>
-        </p>
+            <p class="text-sm text-gray-500 mb-2">
+                Account
+            </p>
 
-    </div>
+            <h1 class="text-3xl md:text-4xl font-semibold text-gray-900">
+                My Account
+            </h1>
+
+            <p class="text-gray-500 mt-2">
+                Hello, <%= user.fullname %>
+            </p>
+
+        </div>
 
 
-    <!-- Account Options -->
+        <!-- Account Options -->
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
 
-        <!-- Orders -->
+            <!-- Orders -->
 
-        <a href="/orders"
-           class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm hover:shadow-md transition duration-200 min-h-[150px] flex flex-col justify-center">
+            <a href="/orders"
+               class="group bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-gray-300 transition duration-200">
 
-            <div class="flex items-center gap-3">
+                <div class="flex items-start justify-between">
 
-                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-xl">
-                    📦
+                    <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+
+                        <i class="ri-shopping-bag-3-line text-xl"></i>
+
+                    </div>
+
+                    <i class="ri-arrow-right-up-line text-gray-400 group-hover:text-gray-900 transition"></i>
+
                 </div>
 
-                <h2 class="text-xl font-semibold text-gray-900">
+                <h2 class="text-lg font-semibold text-gray-900 mt-5">
                     My Orders
                 </h2>
 
-            </div>
+                <p class="text-sm text-gray-500 mt-2">
+                    View and track your orders
+                </p>
 
-            <p class="text-gray-500 mt-3">
-                View and track your orders
-            </p>
+                <p class="text-sm text-blue-600 mt-4">
+                    View orders
+                </p>
 
-            <p class="text-blue-600 text-sm mt-4">
-                View orders →
-            </p>
-
-        </a>
+            </a>
 
 
-        <!-- Profile -->
+            <!-- Profile -->
 
-        <a href="/profile"
-           class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm hover:shadow-md transition duration-200 min-h-[150px] flex flex-col justify-center">
+            <a href="/profile"
+               class="group bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-gray-300 transition duration-200">
 
-            <div class="flex items-center gap-3">
+                <div class="flex items-start justify-between">
 
-                <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-xl">
-                    👤
+                    <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+
+                        <i class="ri-user-line text-xl"></i>
+
+                    </div>
+
+                    <i class="ri-arrow-right-up-line text-gray-400 group-hover:text-gray-900 transition"></i>
+
                 </div>
 
-                <h2 class="text-xl font-semibold text-gray-900">
+                <h2 class="text-lg font-semibold text-gray-900 mt-5">
                     My Profile
                 </h2>
 
-            </div>
+                <p class="text-sm text-gray-700 mt-2">
+                    <%= user.fullname %>
+                </p>
 
-            <p class="text-gray-700 mt-3">
-                <%= user.fullname %>
-            </p>
+                <p class="text-sm text-gray-500 truncate">
+                    <%= user.email %>
+                </p>
 
-            <p class="text-gray-500">
-                <%= user.email %>
-            </p>
+                <p class="text-sm text-blue-600 mt-4">
+                    View profile
+                </p>
 
-            <p class="text-blue-600 text-sm mt-4">
-                View or edit profile →
-
-            </p>
-
-        </a>
+            </a>
 
 
-        <!-- Addresses -->
+            <!-- Addresses -->
 
-        <div class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm min-h-[150px] flex flex-col justify-center">
+            <div class="group bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-gray-300 transition duration-200">
 
-            <div class="flex items-center gap-3">
+                <div class="flex items-start justify-between">
 
-                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-xl">
-                    📍
+                    <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+
+                        <i class="ri-map-pin-line text-xl"></i>
+
+                    </div>
+
+                    <i class="ri-arrow-right-up-line text-gray-400 group-hover:text-gray-900 transition"></i>
+
                 </div>
 
-                <h2 class="text-xl font-semibold text-gray-900">
+                <h2 class="text-lg font-semibold text-gray-900 mt-5">
                     Addresses
                 </h2>
 
-            </div>
-
-            <p class="text-gray-500 mt-3">
-                Manage your delivery addresses
-            </p>
-
-            <a href="/addresses"
-            class="inline-block mt-4 text-blue-600 hover:underline">
-                Manage Addresses →
-            </a>
-
-        </div>
-
-
-        <!-- Wishlist -->
-
-        <div class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm min-h-[150px] flex flex-col justify-center">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-10 h-10 rounded-full bg-pink-50 flex items-center justify-center text-xl">
-                    ❤️
-                </div>
-
-                <h2 class="text-xl font-semibold text-gray-900">
-                    Wishlist
-                </h2>
-
-            </div>
-
-            <p class="text-gray-500 mt-3">
-                View your saved products
-            </p>
-
-            <p class="text-sm text-gray-400 mt-4">
-                Coming soon
-            </p>
-
-        </div>
-
-
-        <!-- Payment Methods -->
-
-        <div class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm min-h-[150px] flex flex-col justify-center">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-xl">
-                    💳
-                </div>
-
-                <h2 class="text-xl font-semibold text-gray-900">
-                    Payment Methods
-                </h2>
-
-            </div>
-
-            <p class="text-gray-500 mt-3">
-                Manage your payment methods
-            </p>
-
-            <p class="text-sm text-gray-400 mt-4">
-                Coming soon
-            </p>
-
-        </div>
-
-
-        <!-- Notifications -->
-
-        <div class="bg-white border border-gray-200 rounded-xl p-7 shadow-sm min-h-[150px] flex flex-col justify-center">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-xl">
-                    🔔
-                </div>
-
-                <h2 class="text-xl font-semibold text-gray-900">
-                    Notifications
-                </h2>
-
-            </div>
-
-            <p class="text-gray-500 mt-3">
-                Manage notification preferences
-            </p>
-
-            <p class="text-sm text-gray-400 mt-4">
-                Coming soon
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- Recent Orders -->
-
-    <div class="max-w-7xl mx-auto bg-white border border-gray-200 rounded-xl p-7 mt-8 shadow-sm">
-
-        <div class="flex justify-between items-center">
-
-            <div>
-
-                <h2 class="text-2xl font-semibold text-gray-900">
-                    Recent Orders
-                </h2>
-
-                <p class="text-gray-500 text-sm mt-1">
-                    Your latest purchases
+                <p class="text-sm text-gray-500 mt-2">
+                    Manage your delivery addresses
                 </p>
 
-            </div>
+                <a href="/addresses"
+                   class="inline-block text-sm text-blue-600 mt-4 hover:underline">
 
-            <a href="/orders"
-               class="text-blue-600 hover:underline text-sm font-medium">
-                View All →
-            </a>
+                    Manage addresses
 
-        </div>
-
-
-        <% if (orders.length === 0) { %>
-
-            <div class="py-10 text-center">
-
-                <p class="text-gray-500">
-                    You haven't placed any orders yet.
-                </p>
-
-                <a href="/shop"
-                   class="inline-block mt-4 text-blue-600 hover:underline">
-                    Start Shopping →
                 </a>
 
             </div>
 
-        <% } else { %>
 
-            <div class="mt-6 flex flex-col gap-3">
+            <!-- Wishlist -->
 
-                <% orders.forEach(order => { %>
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
 
-                    <div class="border border-gray-200 rounded-lg p-5 flex flex-col md:flex-row md:justify-between md:items-center gap-4 hover:bg-gray-50 transition">
+                <div class="flex items-start justify-between">
 
-                        <div>
+                    <div class="w-11 h-11 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center">
 
-                            <p class="font-medium text-gray-900">
-                                Order #<%= order._id %>
-                            </p>
-
-                            <p class="text-sm text-gray-500 mt-1">
-                                Placed on <%= order.createdAt.toLocaleDateString() %>
-                            </p>
-
-                        </div>
-
-
-                        <div class="flex items-center justify-between md:justify-end gap-8">
-
-                            <div>
-
-                                <p class="font-semibold text-gray-900">
-                                    ₹ <%= order.totalAmount %>
-                                </p>
-
-                                <p class="text-sm text-gray-500 capitalize mt-1">
-                                    <%= order.status %>
-                                </p>
-
-                            </div>
-
-                            <a href="/orders/<%= order._id %>"
-                               class="text-blue-600 text-sm hover:underline">
-                                View Details →
-                            </a>
-
-                        </div>
+                        <i class="ri-heart-line text-xl"></i>
 
                     </div>
 
-                <% }) %>
+                    <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">
+                        Soon
+                    </span>
+
+                </div>
+
+                <h2 class="text-lg font-semibold text-gray-900 mt-5">
+                    Wishlist
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-2">
+                    View your saved products
+                </p>
+
+                <p class="text-sm text-gray-400 mt-4">
+                    Coming soon
+                </p>
 
             </div>
 
-        <% } %>
 
-    </div>
+            <!-- Payment Methods -->
+
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
+
+                        <i class="ri-bank-card-line text-xl"></i>
+
+                    </div>
+
+                    <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">
+                        Soon
+                    </span>
+
+                </div>
+
+                <h2 class="text-lg font-semibold text-gray-900 mt-5">
+                    Payment Methods
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-2">
+                    Manage your payment methods
+                </p>
+
+                <p class="text-sm text-gray-400 mt-4">
+                    Coming soon
+                </p>
+
+            </div>
 
 
-    <!-- Logout -->
+            <!-- Notifications -->
 
-    <div class="max-w-7xl mx-auto mt-8 pb-10">
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
 
-        <a href="/users/logout"
-           class="text-red-600 hover:text-red-700 font-medium">
-            Logout
-        </a>
+                <div class="flex items-start justify-between">
+
+                    <div class="w-11 h-11 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center">
+
+                        <i class="ri-notification-3-line text-xl"></i>
+
+                    </div>
+
+                    <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full">
+                        Soon
+                    </span>
+
+                </div>
+
+                <h2 class="text-lg font-semibold text-gray-900 mt-5">
+                    Notifications
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-2">
+                    Manage notification preferences
+                </p>
+
+                <p class="text-sm text-gray-400 mt-4">
+                    Coming soon
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Recent Orders -->
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 md:p-7 mt-8 shadow-sm">
+
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+                <div>
+
+                    <h2 class="text-xl md:text-2xl font-semibold text-gray-900">
+                        Recent Orders
+                    </h2>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Your latest purchases
+                    </p>
+
+                </div>
+
+                <a href="/orders"
+                   class="text-sm text-blue-600 hover:underline">
+
+                    View all orders →
+
+                </a>
+
+            </div>
+
+
+            <% if (orders.length === 0) { %>
+
+                <!-- Empty Orders -->
+
+                <div class="py-12 text-center">
+
+                    <div class="w-14 h-14 mx-auto rounded-full bg-gray-100 flex items-center justify-center">
+
+                        <i class="ri-shopping-bag-line text-2xl text-gray-400"></i>
+
+                    </div>
+
+                    <p class="text-gray-500 mt-4">
+                        You haven't placed any orders yet.
+                    </p>
+
+                    <a href="/shop"
+                       class="inline-block mt-4 text-blue-600 text-sm hover:underline">
+
+                        Start Shopping →
+
+                    </a>
+
+                </div>
+
+            <% } else { %>
+
+
+                <!-- Orders List -->
+
+                <div class="mt-6 space-y-3">
+
+                    <% orders.forEach(order => { %>
+
+                        <div class="border border-gray-200 rounded-xl p-4 sm:p-5 hover:bg-gray-50 transition">
+
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                                <!-- Order Info -->
+
+                                <div class="min-w-0">
+
+                                    <p class="font-medium text-gray-900 truncate">
+
+                                        Order #<%= order._id %>
+
+                                    </p>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+
+                                        Placed on
+                                        <%= order.createdAt.toLocaleDateString() %>
+
+                                    </p>
+
+                                </div>
+
+
+                                <!-- Order Details -->
+
+                                <div class="flex items-center justify-between md:justify-end gap-5">
+
+                                    <div>
+
+                                        <p class="font-semibold text-gray-900">
+                                            ₹ <%= order.totalAmount %>
+                                        </p>
+
+                                        <p class="text-sm text-gray-500 capitalize mt-1">
+
+                                            <%= order.status %>
+
+                                        </p>
+
+                                    </div>
+
+                                    <a href="/orders/<%= order._id %>"
+                                       class="text-sm text-blue-600 hover:underline whitespace-nowrap">
+
+                                        View Details →
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+
+        <!-- Logout -->
+
+        <div class="mt-8 pb-10">
+
+            <a href="/users/logout"
+               class="inline-flex items-center gap-2 text-sm text-red-600 hover:text-red-700 transition">
+
+                <i class="ri-logout-box-r-line"></i>
+
+                Logout
+
+            </a>
+
+        </div>
 
     </div>
 

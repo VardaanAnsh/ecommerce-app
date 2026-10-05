@@ -18,9 +18,18 @@
                 </p>
             </div>
 
-            <a href="/account"
-               class="text-blue-600 hover:underline">
-                ← Back to Account
+            <a
+                href="<%= returnTo %>"
+                class="inline-flex items-center gap-1
+                    text-blue-600 hover:text-blue-700
+                    transition">
+
+                <i class="ri-arrow-left-line"></i>
+
+                <%= returnTo === '/checkout'
+                    ? 'Back to Checkout'
+                    : 'Back to Account' %>
+
             </a>
 
         </div>
@@ -38,7 +47,7 @@
                 Add an address for your future orders
             </p>
 
-            <form action="/addresses" method="POST" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+            <form action="/addresses?returnTo=<%= returnTo %>" method="POST" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
 
                 <!-- Label -->
 
@@ -278,7 +287,7 @@
                                     <% } %>
 
                                     <a
-                                        href="/addresses/<%= address._id %>/edit"
+                                        href="/addresses/<%= address._id %>/edit?returnTo=<%= returnTo %>"
                                         class="text-blue-600 text-sm hover:underline">
                                         Edit
                                     </a>

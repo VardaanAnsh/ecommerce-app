@@ -11,7 +11,15 @@ router.get('/', isLoggedIn, async function(req, res) {
             .findById(req.user._id)
             .select('-password');
 
-        res.render('addresses', { user });
+        const returnTo =
+            req.query.returnTo === '/checkout'
+                ? '/checkout'
+                : '/account';
+
+        res.render('addresses', {
+            user,
+            returnTo
+        });
 
     } catch (error) {
         console.error(error);
@@ -47,7 +55,12 @@ router.post('/', isLoggedIn, async function(req, res) {
 
         req.flash('success', 'Address added successfully');
 
-        res.redirect('/addresses');
+        const returnTo =
+            req.query.returnTo === '/checkout'
+                ? '/checkout'
+                : '/account';
+
+        res.redirect(`/addresses?returnTo=${returnTo}`);
 
     } catch (error) {
         console.error(error);
@@ -69,8 +82,14 @@ router.get('/:addressId/edit', isLoggedIn, async function(req, res) {
             return res.status(404).send('Address not found');
         }
 
+        const returnTo =
+            req.query.returnTo === '/checkout'
+                ? '/checkout'
+                : '/account';
+
         res.render('edit-address', {
-            address
+            address,
+            returnTo
         });
 
     } catch (error) {

@@ -1,274 +1,879 @@
 <%- include('./partials/header') %>
 
-<div class="w-full min-h-screen bg-gray-50 px-6 md:px-12 lg:px-20 py-12">
 
-    <div class="max-w-6xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
 
-        <div class="mb-8">
-            <h1 class="text-4xl font-semibold text-gray-900">
+
+    <!-- ================= PAGE HEADER ================= -->
+
+    <div class="mb-8">
+
+        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+
+            <a
+                href="/cart"
+                class="hover:text-black transition">
+
+                Cart
+
+            </a>
+
+            <i class="ri-arrow-right-s-line"></i>
+
+            <span class="text-gray-900">
                 Checkout
-            </h1>
+            </span>
 
-            <p class="text-gray-500 mt-2">
-                Choose your delivery address
-            </p>
         </div>
 
 
-        <% if (user.addresses.length === 0) { %>
+        <h1
+            class="text-2xl sm:text-3xl font-semibold
+                   text-gray-900">
 
-            <div class="bg-white border border-gray-200 rounded-xl p-8 text-center">
+            Checkout
 
-                <h2 class="text-xl font-semibold text-gray-900">
-                    No delivery address found
-                </h2>
+        </h1>
 
-                <p class="text-gray-500 mt-2">
-                    Add an address before placing your order.
-                </p>
 
-                <a
-                    href="/addresses"
-                    class="inline-block mt-5 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
-                    Add Address
-                </a>
+        <p class="text-gray-500 mt-2">
+
+            Choose your delivery address and review your order.
+
+        </p>
+
+    </div>
+
+
+    <% if (user.addresses.length === 0) { %>
+
+
+        <!-- ================================================= -->
+        <!-- NO ADDRESS STATE                                  -->
+        <!-- ================================================= -->
+
+        <div
+            class="min-h-[420px]
+                   flex flex-col
+                   items-center
+                   justify-center
+                   text-center
+                   rounded-2xl
+                   border border-gray-200
+                   bg-white
+                   px-6">
+
+
+            <div
+                class="w-20 h-20
+                       rounded-full
+                       bg-gray-100
+                       flex items-center
+                       justify-center
+                       mb-6">
+
+                <i
+                    class="ri-map-pin-line
+                           text-3xl
+                           text-gray-500">
+                </i>
 
             </div>
 
-        <% } else { %>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <h2
+                class="text-2xl font-semibold
+                       text-gray-900">
 
-                <!-- Addresses -->
+                No delivery address found
 
-                <div class="lg:col-span-2">
+            </h2>
 
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-                        <h2 class="text-2xl font-semibold text-gray-900">
-                            Delivery Address
-                        </h2>
+            <p
+                class="text-gray-500
+                       mt-2
+                       max-w-md">
 
-                        <div class="mt-6 flex flex-col gap-4">
+                Add a delivery address before placing your order.
 
-                            <% user.addresses.forEach(address => { %>
+            </p>
 
-                                <label
-                                    class="border border-gray-200 rounded-lg p-5 cursor-pointer hover:border-blue-500 transition">
 
-                                    <div class="flex gap-4">
+            <a
+                href="/addresses"
+                class="mt-6
+                       inline-flex
+                       items-center
+                       gap-2
+                       bg-black
+                       text-white
+                       px-6 py-3
+                       rounded-xl
+                       text-sm font-semibold
+                       hover:bg-gray-800
+                       transition">
 
-                                        <input
-                                            type="radio"
-                                            name="addressId"
-                                            value="<%= address._id %>"
-                                            <%= address.isDefault ? 'checked' : '' %>
-                                            class="mt-1">
+                Add Address
 
-                                        <div>
+                <i class="ri-arrow-right-line"></i>
 
-                                            <div class="flex items-center gap-3">
+            </a>
 
-                                                <h3 class="font-semibold text-gray-900">
-                                                    <%= address.label %>
-                                                </h3>
+        </div>
 
-                                                <% if (address.isDefault) { %>
 
-                                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                                                        Default
-                                                    </span>
+    <% } else { %>
 
-                                                <% } %>
 
-                                            </div>
+        <!-- ================================================= -->
+        <!-- CHECKOUT CONTENT                                  -->
+        <!-- ================================================= -->
 
-                                            <p class="font-medium text-gray-900 mt-3">
-                                                <%= address.name %>
-                                            </p>
+        <div
+            class="grid grid-cols-1
+                   lg:grid-cols-5
+                   gap-6 lg:gap-8">
 
-                                            <p class="text-gray-600 text-sm mt-1">
-                                                <%= address.addressLine %>
-                                            </p>
 
-                                            <p class="text-gray-600 text-sm">
-                                                <%= address.city %>,
-                                                <%= address.state %> -
-                                                <%= address.pincode %>
-                                            </p>
+            <!-- ================================================= -->
+            <!-- DELIVERY ADDRESS                                 -->
+            <!-- ================================================= -->
 
-                                            <p class="text-gray-600 text-sm mt-1">
-                                                Phone: <%= address.phone %>
-                                            </p>
+            <div class="lg:col-span-3">
 
-                                        </div>
 
-                                    </div>
+                <div
+                    class="bg-white
+                           border border-gray-200
+                           rounded-2xl
+                           p-5 sm:p-6
+                           shadow-sm">
 
-                                </label>
 
-                            <% }) %>
+                    <!-- Section Header -->
+
+                    <div
+                        class="flex items-start
+                               justify-between gap-4">
+
+
+                        <div>
+
+                            <div class="flex items-center gap-2">
+
+                                <div
+                                    class="w-8 h-8
+                                           rounded-full
+                                           bg-gray-100
+                                           flex items-center
+                                           justify-center">
+
+                                    <i class="ri-map-pin-line"></i>
+
+                                </div>
+
+                                <h2
+                                    class="text-xl
+                                           font-semibold
+                                           text-gray-900">
+
+                                    Delivery Address
+
+                                </h2>
+
+                            </div>
+
+
+                            <p
+                                class="text-sm
+                                       text-gray-500
+                                       mt-2">
+
+                                Select where you'd like your order
+                                delivered.
+
+                            </p>
 
                         </div>
 
 
                         <a
-                            href="/addresses"
-                            class="inline-block mt-5 text-blue-600 text-sm hover:underline">
-                            + Manage Addresses
+                            href="/addresses?returnTo=/checkout"
+                            class="hidden sm:inline-flex
+                                   items-center gap-1
+                                   text-sm font-medium
+                                   text-gray-700
+                                   hover:text-black
+                                   transition">
+
+                            Manage
+
+                            <i class="ri-arrow-right-s-line"></i>
+
                         </a>
 
                     </div>
 
-                </div>
+
+                    <!-- Address List -->
+
+                    <div class="mt-6 space-y-4">
 
 
-                <!-- Order Summary -->
+                        <% user.addresses.forEach(address => { %>
 
-                <div>
 
-                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                            <label
+                                class="address-card
+                                       block
+                                       border border-gray-200
+                                       rounded-xl
+                                       p-4 sm:p-5
+                                       cursor-pointer
+                                       transition-all
+                                       hover:border-gray-400
+                                       hover:shadow-sm">
 
-                        <h2 class="text-xl font-semibold text-gray-900">
-                            Order Summary
-                        </h2>
-                        <div class="mt-5 space-y-4 text-gray-600">
 
-                    <div class="flex justify-between">
-                        <span>
-                            Items
-                        </span>
-                        <span>
-                            <%= totalItems %>
-                        </span>
+                                <div
+                                    class="flex items-start
+                                           gap-4">
+
+
+                                    <!-- Radio -->
+
+                                    <input
+                                        type="radio"
+                                        name="addressId"
+                                        value="<%= address._id %>"
+                                        <%= address.isDefault ? 'checked' : '' %>
+                                        class="address-radio
+                                               mt-1.5
+                                               w-4 h-4
+                                               accent-black
+                                               flex-shrink-0">
+
+
+                                    <!-- Address Information -->
+
+                                    <div class="min-w-0 flex-1">
+
+
+                                        <!-- Label -->
+
+                                        <div
+                                            class="flex flex-wrap
+                                                   items-center
+                                                   gap-2">
+
+
+                                            <h3
+                                                class="font-semibold
+                                                       text-gray-900">
+
+                                                <%= address.label %>
+
+                                            </h3>
+
+
+                                            <% if (address.isDefault) { %>
+
+                                                <span
+                                                    class="text-xs
+                                                           font-medium
+                                                           bg-green-100
+                                                           text-green-700
+                                                           px-2 py-1
+                                                           rounded-full">
+
+                                                    Default
+
+                                                </span>
+
+                                            <% } %>
+
+                                        </div>
+
+
+                                        <!-- Name -->
+
+                                        <p
+                                            class="font-medium
+                                                   text-gray-900
+                                                   mt-3">
+
+                                            <%= address.name %>
+
+                                        </p>
+
+
+                                        <!-- Address -->
+
+                                        <p
+                                            class="text-sm
+                                                   text-gray-600
+                                                   mt-1
+                                                   leading-6">
+
+                                            <%= address.addressLine %><br>
+
+                                            <%= address.city %>,
+                                            <%= address.state %>
+                                            -
+                                            <%= address.pincode %>
+
+                                        </p>
+
+
+                                        <!-- Phone -->
+
+                                        <p
+                                            class="text-sm
+                                                   text-gray-500
+                                                   mt-2">
+
+                                            <i
+                                                class="ri-phone-line
+                                                       mr-1">
+                                            </i>
+
+                                            <%= address.phone %>
+
+                                        </p>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </label>
+
+
+                        <% }) %>
+
+
                     </div>
 
-                    <div class="flex justify-between">
-                        <span>
-                            Subtotal
-                        </span>
-                        <span>
-                            ₹<%= subtotal %>
-                        </span>
-                    </div>
 
-                    <div class="flex justify-between">
-                        <span>
-                            Discount
-                        </span>
-                        <span class="text-green-600">
-                            - ₹<%= discount %>
-                        </span>
-                    </div>
+                    <!-- Manage Addresses Mobile -->
 
-                    <div class="flex justify-between">
-                        <span>
-                            Platform Fee
-                        </span>
-                        <span>
-                            ₹<%= platformFee %>
-                        </span>
-                    </div>
+                    <a
+                        href="/addresses?returnTo=/checkout"
+                        class="sm:hidden
+                               mt-5
+                               flex items-center
+                               justify-center
+                               gap-1
+                               w-full
+                               py-3
+                               border border-gray-200
+                               rounded-xl
+                               text-sm font-medium
+                               text-gray-700
+                               hover:bg-gray-50
+                               transition">
 
-                    <div class="flex justify-between">
-                        <span>
-                            Shipping
-                        </span>
-                        <span class="text-green-600">
-                            FREE
-                        </span>
-                    </div>
+                        Manage Addresses
 
-                </div>
+                        <i class="ri-arrow-right-s-line"></i>
 
-                <div class="border-t border-gray-200 mt-5 pt-5 flex justify-between">
-                    <span class="font-semibold text-gray-900">
-                        Total
-                    </span>
-
-                    <span class="font-semibold text-gray-900">
-                        ₹<%= totalAmount %>
-                    </span>
-                </div>
+                    </a>
 
 
-                        <button
-                            id="place-order-btn"
-                            type="button"
-                            class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    <!-- Security Note -->
 
-                            Place Order
+                    <div
+                        class="mt-6
+                               flex items-start gap-3
+                               rounded-xl
+                               bg-gray-50
+                               p-4">
 
-                        </button>
+
+                        <i
+                            class="ri-shield-check-line
+                                   text-lg
+                                   text-green-600
+                                   mt-0.5">
+                        </i>
+
+
+                        <p
+                            class="text-xs
+                                   leading-5
+                                   text-gray-500">
+
+                            Your delivery information is securely
+                            associated with your order.
+
+                        </p>
+
 
                     </div>
+
 
                 </div>
 
             </div>
 
-        <% } %>
 
-    </div>
+            <!-- ================================================= -->
+            <!-- ORDER SUMMARY                                     -->
+            <!-- ================================================= -->
+
+            <div class="lg:col-span-2">
+
+
+                <div
+                    class="lg:sticky lg:top-24
+                           bg-white
+                           border border-gray-200
+                           rounded-2xl
+                           p-5 sm:p-6
+                           shadow-sm">
+
+
+                    <!-- Header -->
+
+                    <div>
+
+                        <h2
+                            class="text-xl
+                                   font-semibold
+                                   text-gray-900">
+
+                            Order Summary
+
+                        </h2>
+
+
+                        <p
+                            class="text-sm
+                                   text-gray-500
+                                   mt-1">
+
+                            Review your order before placing it.
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- Summary -->
+
+                    <div class="mt-6 space-y-4">
+
+
+                        <!-- Items -->
+
+                        <div
+                            class="flex justify-between
+                                   text-sm">
+
+                            <span class="text-gray-500">
+                                Items
+                            </span>
+
+                            <span
+                                class="font-medium
+                                       text-gray-900">
+
+                                <%= totalItems %>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Subtotal -->
+
+                        <div
+                            class="flex justify-between
+                                   text-sm">
+
+                            <span class="text-gray-500">
+                                Subtotal
+                            </span>
+
+                            <span
+                                class="text-gray-900">
+
+                                ₹<%= subtotal %>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Discount -->
+
+                        <div
+                            class="flex justify-between
+                                   text-sm">
+
+                            <span class="text-gray-500">
+                                Discount
+                            </span>
+
+                            <span class="text-green-600">
+
+                                - ₹<%= discount %>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Platform Fee -->
+
+                        <div
+                            class="flex justify-between
+                                   text-sm">
+
+                            <span class="text-gray-500">
+                                Platform Fee
+                            </span>
+
+                            <span class="text-gray-900">
+
+                                ₹<%= platformFee %>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Shipping -->
+
+                        <div
+                            class="flex justify-between
+                                   text-sm">
+
+                            <span class="text-gray-500">
+                                Shipping
+                            </span>
+
+                            <span
+                                class="font-medium
+                                       text-green-600">
+
+                                FREE
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- Total -->
+
+                    <div
+                        class="border-t
+                               border-gray-200
+                               mt-6
+                               pt-5
+                               flex items-center
+                               justify-between">
+
+
+                        <span
+                            class="text-lg
+                                   font-semibold
+                                   text-gray-900">
+
+                            Total
+
+                        </span>
+
+
+                        <span
+                            class="text-2xl
+                                   font-bold
+                                   text-gray-900">
+
+                            ₹<%= totalAmount %>
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Place Order -->
+
+                    <button
+                        id="place-order-btn"
+                        type="button"
+                        class="w-full
+                               mt-6
+                               bg-black
+                               text-white
+                               py-3.5
+                               rounded-xl
+                               font-semibold
+                               text-sm
+                               hover:bg-gray-800
+                               disabled:opacity-60
+                               disabled:cursor-not-allowed
+                               transition">
+
+                        <span id="place-order-text">
+                            Place Order
+                        </span>
+
+                        <i
+                            class="ri-arrow-right-line
+                                   ml-1">
+                        </i>
+
+                    </button>
+
+
+                    <!-- Back to Cart -->
+
+                    <a
+                        href="/cart"
+                        class="w-full
+                               mt-3
+                               flex items-center
+                               justify-center
+                               gap-1
+                               py-3
+                               rounded-xl
+                               border border-gray-200
+                               text-sm
+                               font-medium
+                               text-gray-700
+                               hover:bg-gray-50
+                               transition">
+
+                        <i class="ri-arrow-left-line"></i>
+
+                        Back to Cart
+
+                    </a>
+
+
+                    <!-- Secure Checkout -->
+
+                    <div
+                        class="mt-5
+                               flex items-center
+                               justify-center
+                               gap-2
+                               text-xs
+                               text-gray-400">
+
+                        <i class="ri-lock-line"></i>
+
+                        Secure checkout
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    <% } %>
+
 
 </div>
 
 
+<!-- ================================================= -->
+<!-- PLACE ORDER SCRIPT                                -->
+<!-- ================================================= -->
+
 <script>
 
-    const placeOrderButton = document.getElementById('place-order-btn');
+    const placeOrderButton =
+        document.getElementById('place-order-btn');
+
+    const placeOrderText =
+        document.getElementById('place-order-text');
+
 
     if (placeOrderButton) {
 
-        placeOrderButton.addEventListener('click', async function() {
-            const selectedAddress = document.querySelector(
-                'input[name="addressId"]:checked'
+        placeOrderButton.addEventListener(
+            'click',
+            async function () {
+
+
+                const selectedAddress =
+                    document.querySelector(
+                        'input[name="addressId"]:checked'
+                    );
+
+
+                // No address selected
+
+                if (!selectedAddress) {
+
+                    alert(
+                        'Please select a delivery address'
+                    );
+
+                    return;
+
+                }
+
+
+                // Prevent duplicate clicks
+
+                placeOrderButton.disabled = true;
+
+
+                if (placeOrderText) {
+
+                    placeOrderText.innerText =
+                        'Placing Order...';
+
+                }
+
+
+                try {
+
+
+                    const response =
+                        await fetch('/checkout', {
+
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            body: JSON.stringify({
+
+                                addressId:
+                                    selectedAddress.value
+
+                            })
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.message ||
+                            'Checkout failed'
+                        );
+
+                    }
+
+
+                    // Redirect to order success
+
+                    window.location.href =
+                        `/order-success?orderId=${data.orderId}`;
+
+
+                } catch (error) {
+
+
+                    console.error(error);
+
+
+                    placeOrderButton.disabled =
+                        false;
+
+
+                    if (placeOrderText) {
+
+                        placeOrderText.innerText =
+                            'Place Order';
+
+                    }
+
+
+                    alert(error.message);
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =================================================
+    // ADDRESS SELECTION UI
+    // =================================================
+
+    const addressCards =
+        document.querySelectorAll('.address-card');
+
+
+    const addressRadios =
+        document.querySelectorAll('.address-radio');
+
+
+    function updateSelectedAddress() {
+
+
+        addressCards.forEach(card => {
+
+            card.classList.remove(
+                'border-black',
+                'ring-1',
+                'ring-black'
             );
 
-            if (!selectedAddress) {
-                alert('Please select a delivery address');
-                return;
-            }
+        });
 
-            const placeOrderButton = this;
-            placeOrderButton.disabled = true;
-            placeOrderButton.innerText = 'Placing Order...';
 
-            // console.log('SELECTED ADDRESS:', selectedAddress);
-            // console.log('SELECTED ADDRESS VALUE:', selectedAddress.value);
-            try {
+        addressRadios.forEach(radio => {
 
-                const response = await fetch('/checkout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        addressId: selectedAddress.value
-                    })
-                });
+            if (radio.checked) {
 
-                const data = await response.json();
+                const card =
+                    radio.closest('.address-card');
 
-                if (!response.ok) {
-                    throw new Error(
-                        data.message || 'Checkout failed'
+
+                if (card) {
+
+                    card.classList.add(
+                        'border-black',
+                        'ring-1',
+                        'ring-black'
                     );
+
                 }
-                window.location.href = `/order-success?orderId=${data.orderId}`;
-
-            } catch (error) {
-
-                console.error(error);
-                placeOrderButton.disabled = false;
-                placeOrderButton.innerText = 'Place Order';
-                alert(error.message);
 
             }
 
         });
 
     }
+
+
+    addressRadios.forEach(radio => {
+
+        radio.addEventListener(
+            'change',
+            updateSelectedAddress
+        );
+
+    });
+
+
+    updateSelectedAddress();
 
 </script>
 
