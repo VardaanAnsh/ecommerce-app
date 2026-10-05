@@ -89,31 +89,28 @@ module.exports.loginUser = async (req, res) => {
         const user = await userModel.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({
-                message: 'Something went wrong: User not found'
-            });
+            req.flash('error', 'No account found with this email');
+            return res.redirect('/');
         }
 
         const result = await bcrypt.compare(password, user.password);
 
         if (!result) {
-            return res.status(400).json({
-                message: 'Password is incorrect'
-            });
+            req.flash('error', 'Incorrect password');
+            return res.redirect('/');
         }
 
         const token = generateToken(user);
 
-        res.cookie('token', token , cookieOptions);
+        res.cookie('token', token, cookieOptions);
 
         return res.redirect('/shop');
 
     } catch (error) {
         console.error('Login error:', error);
 
-        return res.status(500).json({
-            message: 'Something went wrong during login'
-        });
+        req.flash('error', 'Something went wrong. Please try again.');
+        return res.redirect('/');
     }
 };
 

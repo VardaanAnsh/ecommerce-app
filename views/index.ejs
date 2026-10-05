@@ -1,85 +1,483 @@
 <%- include('./partials/header') %>
 
-<div class="w-full h-screen flex px-20">
-  <!-- REGISTER SECTION -->
-  <div class="w-1/2 flex items-center justify-center h-screen">
-    <div class="w-full px-32">
-      <h3 class="text-4xl">welcome to <span class="text-blue-400 font-semibold">Scatch</span></h3>
-      <h4 class="text-2xl mb-5">create your account</h4>
+<div class="min-h-[calc(100vh-64px)] bg-gray-50">
 
-      <!-- FLASH MESSAGES (Register Side) -->
-      <% if (success && success.length > 0) { %>
-        <div class="bg-green-500 text-white p-3 rounded-md mb-3">
-          <% success.forEach(msg => { %>
-            <p><%= msg %></p>
-          <% }) %>
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-6 sm:py-8 lg:py-10">
+
+        <!-- ================= MAIN CARD ================= -->
+        <div class="grid grid-cols-1 lg:grid-cols-2
+                    bg-white border border-gray-200
+                    rounded-2xl overflow-hidden shadow-sm">
+
+            <!-- ================================================= -->
+            <!-- REGISTER SIDE                                    -->
+            <!-- ================================================= -->
+
+            <div class="p-6 sm:p-8 lg:p-10 xl:p-12">
+
+                <div class="max-w-md">
+
+                    <!-- Heading -->
+                    <div>
+
+                        <p class="text-sm font-medium text-gray-500 mb-2">
+                            Welcome to Cartinger
+                        </p>
+
+                        <h1 class="text-3xl sm:text-4xl
+                                   font-semibold text-gray-900">
+
+                            Create your account
+
+                        </h1>
+
+                        <p class="text-gray-500 mt-3 leading-6">
+                            Create an account to shop, manage your
+                            orders and save your delivery addresses.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Register Form -->
+                    <form
+                        autocomplete="off"
+                        action="/users/register"
+                        method="post"
+                        class="mt-7">
+
+
+                        <!-- Full Name -->
+                        <div>
+
+                            <label
+                                class="block text-sm font-medium
+                                       text-gray-700 mb-2">
+
+                                Full Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="fullname"
+                                placeholder="Enter your full name"
+                                value="<%= typeof formData !== 'undefined' && formData.fullname ? formData.fullname : '' %>"
+                                class="w-full
+                                       bg-white
+                                       border border-gray-300
+                                       rounded-lg
+                                       px-4 py-3
+                                       text-sm
+                                       outline-none
+                                       focus:border-black
+                                       focus:ring-1
+                                       focus:ring-black
+                                       transition">
+
+
+                            <% if (typeof errorMessages !== 'undefined' &&
+                                   errorMessages.fullname) { %>
+
+                                <p class="text-sm text-red-500 mt-2">
+                                    <%= errorMessages.fullname %>
+                                </p>
+
+                            <% } %>
+
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="mt-4">
+
+                            <label
+                                class="block text-sm font-medium
+                                       text-gray-700 mb-2">
+
+                                Email Address
+
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                value="<%= typeof formData !== 'undefined' && formData.email ? formData.email : '' %>"
+                                class="w-full
+                                       bg-white
+                                       border border-gray-300
+                                       rounded-lg
+                                       px-4 py-3
+                                       text-sm
+                                       outline-none
+                                       focus:border-black
+                                       focus:ring-1
+                                       focus:ring-black
+                                       transition">
+
+
+                            <% if (typeof errorMessages !== 'undefined' &&
+                                   errorMessages.email) { %>
+
+                                <p class="text-sm text-red-500 mt-2">
+                                    <%= errorMessages.email %>
+                                </p>
+
+                            <% } %>
+
+                        </div>
+
+
+                        <!-- Password -->
+                        <div class="mt-4">
+
+                            <label
+                                class="block text-sm font-medium
+                                       text-gray-700 mb-2">
+
+                                Password
+
+                            </label>
+
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Create a strong password"
+                                class="w-full
+                                       bg-white
+                                       border border-gray-300
+                                       rounded-lg
+                                       px-4 py-3
+                                       text-sm
+                                       outline-none
+                                       focus:border-black
+                                       focus:ring-1
+                                       focus:ring-black
+                                       transition">
+
+
+                            <% if (typeof errorMessages !== 'undefined' &&
+                                   errorMessages.password) { %>
+
+                                <p class="text-sm text-red-500 mt-2">
+                                    <%= errorMessages.password %>
+                                </p>
+
+                            <% } %>
+
+                        </div>
+
+
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            class="w-full mt-6
+                                   bg-black
+                                   text-white
+                                   py-3.5
+                                   rounded-lg
+                                   text-sm
+                                   font-semibold
+                                   hover:bg-gray-800
+                                   transition">
+
+                            Create Account
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Small Note -->
+                    <p class="text-xs text-gray-400 mt-4 leading-5">
+                        By creating an account, you can manage your
+                        cart, addresses and orders from one place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- LOGIN SIDE                                       -->
+            <!-- ================================================= -->
+
+            <div class="bg-gray-50
+                        border-t lg:border-t-0
+                        lg:border-l border-gray-200
+                        p-6 sm:p-8 lg:p-10 xl:p-12
+                        flex items-center">
+
+                <div class="w-full max-w-md mx-auto">
+
+                    <!-- Heading -->
+                    <div>
+
+                        <div
+                            class="w-12 h-12
+                                   rounded-xl
+                                   bg-white
+                                   border border-gray-200
+                                   flex items-center
+                                   justify-center
+                                   mb-5">
+
+                            <i class="ri-user-line
+                                      text-xl
+                                      text-gray-700"></i>
+
+                        </div>
+
+
+                        <p class="text-sm font-medium text-gray-500 mb-2">
+                            Already a customer?
+                        </p>
+
+
+                        <h2
+                            class="text-3xl sm:text-4xl
+                                   font-semibold
+                                   text-gray-900">
+
+                            Login to your account
+
+                        </h2>
+
+
+                        <p class="text-gray-500 mt-3 leading-6">
+                            Sign in to continue shopping and access your account.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Login Error -->
+                    <% if (error && error.length > 0) { %>
+
+                        <div class="mt-6 rounded-xl
+                                    border border-red-200
+                                    bg-red-50 p-4">
+
+                            <div class="flex items-start gap-3">
+
+                                <i class="ri-error-warning-line
+                                          text-red-500 text-lg mt-0.5"></i>
+
+                                <div>
+
+                                    <% error.forEach(message => { %>
+
+                                        <p class="text-sm text-red-600">
+                                            <%= message %>
+                                        </p>
+
+                                    <% }) %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <% } %>
+
+
+                    <!-- Login Form -->
+                    <form
+                        autocomplete="off"
+                        action="/users/login"
+                        method="post"
+                        class="mt-6">
+
+
+                        <!-- Email -->
+                        <div>
+
+                            <label
+                                class="block text-sm
+                                       font-medium
+                                       text-gray-700 mb-2">
+
+                                Email Address
+
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                required
+                                class="w-full
+                                       bg-white
+                                       border border-gray-300
+                                       rounded-lg
+                                       px-4 py-3
+                                       text-sm
+                                       outline-none
+                                       focus:border-black
+                                       focus:ring-1
+                                       focus:ring-black
+                                       transition">
+
+                        </div>
+
+
+                        <!-- Password -->
+                        <div class="mt-4">
+
+                            <label
+                                class="block text-sm
+                                       font-medium
+                                       text-gray-700 mb-2">
+
+                                Password
+
+                            </label>
+
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                required
+                                class="w-full
+                                       bg-white
+                                       border border-gray-300
+                                       rounded-lg
+                                       px-4 py-3
+                                       text-sm
+                                       outline-none
+                                       focus:border-black
+                                       focus:ring-1
+                                       focus:ring-black
+                                       transition">
+
+                        </div>
+
+
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            class="w-full mt-6
+                                   bg-black
+                                   text-white
+                                   py-3.5
+                                   rounded-lg
+                                   text-sm
+                                   font-semibold
+                                   hover:bg-gray-800
+                                   transition">
+
+                            Login
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Benefits -->
+                    <div
+                        class="mt-7
+                               border-t border-gray-200
+                               pt-5">
+
+                        <p class="text-xs
+                                  uppercase
+                                  tracking-wider
+                                  text-gray-400
+                                  font-medium">
+
+                            With Cartinger
+
+                        </p>
+
+
+                        <div class="mt-3 space-y-2.5">
+
+
+                            <!-- Cart -->
+                            <div class="flex items-center gap-3">
+
+                                <div
+                                    class="w-8 h-8
+                                           rounded-lg
+                                           bg-white
+                                           border border-gray-200
+                                           flex items-center
+                                           justify-center">
+
+                                    <i class="ri-shopping-bag-3-line
+                                              text-gray-600"></i>
+
+                                </div>
+
+                                <p class="text-sm text-gray-600">
+                                    Manage your shopping cart
+                                </p>
+
+                            </div>
+
+
+                            <!-- Addresses -->
+                            <div class="flex items-center gap-3">
+
+                                <div
+                                    class="w-8 h-8
+                                           rounded-lg
+                                           bg-white
+                                           border border-gray-200
+                                           flex items-center
+                                           justify-center">
+
+                                    <i class="ri-map-pin-line
+                                              text-gray-600"></i>
+
+                                </div>
+
+                                <p class="text-sm text-gray-600">
+                                    Save multiple delivery addresses
+                                </p>
+
+                            </div>
+
+
+                            <!-- Orders -->
+                            <div class="flex items-center gap-3">
+
+                                <div
+                                    class="w-8 h-8
+                                           rounded-lg
+                                           bg-white
+                                           border border-gray-200
+                                           flex items-center
+                                           justify-center">
+
+                                    <i class="ri-file-list-3-line
+                                              text-gray-600"></i>
+
+                                </div>
+
+                                <p class="text-sm text-gray-600">
+                                    Track your orders
+                                </p>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
-      <% } %>
 
-      <% if (error && error.length > 0) { %>
-        <div class="bg-red-500 text-white p-3 rounded-md mb-3">
-          <% error.forEach(msg => { %>
-            <p><%= msg %></p>
-          <% }) %>
-        </div>
-      <% } %>
-
-      <form autocomplete="off" action="/users/register" method="post">
-        <input
-          class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-          type="text" placeholder="Full Name" name="fullname"
-          value="<%= typeof formData !== 'undefined' && formData.fullname ? formData.fullname : '' %>"
-        >
-        <% if (typeof errorMessages !== 'undefined' && errorMessages.fullname) { %>
-          <span class="text-red-500 text-sm"><%= errorMessages.fullname %></span>
-        <% } %>
-
-        <input
-          class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-          type="email" placeholder="Email" name="email"
-          value="<%= typeof formData !== 'undefined' && formData.email ? formData.email : '' %>"
-        >
-        <% if (typeof errorMessages !== 'undefined' && errorMessages.email) { %>
-          <span class="text-red-500 text-sm"><%= errorMessages.email %></span>
-        <% } %>
-
-        <input
-          class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-          type="password" placeholder="Password" name="password"
-          value="<%= typeof formData !== 'undefined' && formData.password ? formData.password : '' %>"
-        >
-        <% if (typeof errorMessages !== 'undefined' && errorMessages.password) { %>
-          <span class="text-red-500 text-sm inline"><%= errorMessages.password %></span>
-        <% } %>
-
-        <input class="px-5 rounded-full py-3 mt-2 bg-blue-500 text-white block" type="submit" value="Create My Account">
-      </form>
     </div>
-  </div>
 
-  <!-- LOGIN SECTION -->
-  <div class="w-1/2 flex items-center justify-center h-screen">
-    <div class="w-full px-32">
-      <h4 class="text-2xl capitalize mb-5">login your account</h4>
-
-      <form autocomplete="off" action="/users/login" method="post">
-        <input
-          class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-          type="email" placeholder="Email" name="email">
-        <input
-          class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-          type="password" placeholder="Password" name="password">
-        <input class="px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit" value="Login">
-      </form>
-    </div>
-  </div>
 </div>
 
-<%- include('./partials/footer') %>
 
-<!-- Optional: Auto-hide flash messages -->
-<script>
-  setTimeout(() => {
-    document.querySelectorAll('.bg-green-500, .bg-red-500').forEach(div => div.remove());
-  }, 3000);
-</script>
+<%- include('./partials/footer') %>

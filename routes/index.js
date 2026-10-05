@@ -7,12 +7,18 @@ const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
 const orderModel = require("../models/order-model");
 
-router.get("/", function (req, res) {
-  let error = req.flash("error");
-  let loginSuccess = req.flash("loginSuccess");
-  let loginError = req.flash("loginError");
+// router.get("/", function (req, res) {
+//   let error = req.flash("error");
+//   let loginSuccess = req.flash("loginSuccess");
+//   let loginError = req.flash("loginError");
 
-  res.render("index", { error, loginSuccess, loginError, loggedin: false });
+//   res.render("index", { error, loginSuccess, loginError, loggedin: false });
+// });
+
+router.get("/", function (req, res) {
+    res.render("index", {
+        loggedin: false
+    });
 });
 
 // router.get('/shop',isLoggedIn, async (req, res) => {
