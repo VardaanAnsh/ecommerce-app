@@ -18,6 +18,7 @@ const ownersRouter = require("./routes/ownersRouter");
 const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
 const addressesRouter = require('./routes/addressesRouter');
+const paymentRouter = require("./routes/paymentRouter");
 const indexpage = require("./routes/index");
 
 // MongoDB connection
@@ -82,6 +83,8 @@ app.use('/owners', ownersRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
 app.use('/addresses', addressesRouter);
+app.use("/payment", paymentRouter);
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

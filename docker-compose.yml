@@ -7,6 +7,8 @@ services:
       MONGODB_URI: ${MONGODB_URI}
       EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
       JWT_KEY: ${JWT_KEY}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
     volumes:
       - .:/app
       - /app/node_modules
@@ -21,6 +23,8 @@ services:
       MONGODB_URI: ${MONGODB_URI}
       EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
       JWT_KEY: ${JWT_KEY}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
     volumes:
       - .:/app
       - /app/node_modules
@@ -35,6 +39,8 @@ services:
       MONGODB_URI: ${MONGODB_URI}
       EXPRESS_SESSION_SECRET: ${EXPRESS_SESSION_SECRET}
       JWT_KEY: ${JWT_KEY}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
     volumes:
       - .:/app
       - /app/node_modules
