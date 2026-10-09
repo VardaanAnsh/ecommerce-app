@@ -280,107 +280,13 @@ router.delete("/cart/:productId", isLoggedIn, async function (req, res) {
   }
 });
 
-router.post("/checkout", isLoggedIn, async function (req, res) {
-  try {
-    const user = await userModel
-      .findById(req.user._id)
-      .populate({
-            path: "cart.product",
-            select: "-image"
-        });
 
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-      });
-    }
-
-    if (!user.cart || user.cart.length === 0) {
-      return res.status(400).json({
-        message: "Cart is empty",
-      });
-    }
-    const unavailableProduct = user.cart.find((item) => !item.product);
-
-    if (unavailableProduct) {
-      return res.status(400).json({
-        message:
-          "One or more products in your cart are no longer available. Please review your cart.",
-      });
-    }
-    const invalidQuantity = user.cart.find(
-      (item) => !Number.isInteger(item.quantity) || item.quantity < 1,
-    );
-
-    if (invalidQuantity) {
-      return res.status(400).json({
-        message: "Invalid product quantity in cart.",
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(req.body.addressId)) {
-      return res.status(400).json({ message: "Invalid address ID" });
-    }
-
-    const address = user.addresses.id(req.body.addressId);
-
-    if (!address) {
-      return res.status(404).json({
-        message: "Address not found",
-      });
-    }
-
-    const items = user.cart.map((item) => ({
-      product: item.product._id,
-      name: item.product.name,
-      price: item.product.price,
-      quantity: item.quantity,
-      discount: item.product.discount,
-    }));
-
-    const totalAmount = user.cart.reduce((total, item) => {
-      return (
-        total +
-        (item.product.price - item.product.discount) * item.quantity +
-        20
-      );
-    }, 0);
-
-    const order = await orderModel.create({
-      user: user._id,
-
-      items,
-
-      shippingAddress: {
-        label: address.label,
-        name: address.name,
-        phone: address.phone,
-        addressLine: address.addressLine,
-        city: address.city,
-        state: address.state,
-        pincode: address.pincode,
-      },
-
-      totalAmount,
+router.post("/checkout", isLoggedIn, function (req, res) {
+    return res.status(410).json({
+        message: "This checkout endpoint has been retired. Please use the payment checkout flow."
     });
-
-    user.cart = [];
-
-    await user.save();
-
-    res.json({
-      success: true,
-      orderId: order._id,
-      totalAmount: order.totalAmount,
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      message: "Something went wrong during checkout",
-    });
-  }
 });
+
 
 router.get("/order-success", isLoggedIn, async function (req, res) {
   try {
