@@ -156,7 +156,8 @@ router.post("/create-order", isLoggedIn, async function (req, res) {
 
 
 
-router.post("/verify", isLoggedIn, async function (req, res) {
+router.post("/verify", isLoggedIn, async function (req, res) 
+{
     try {
         const {
             orderId,
@@ -272,62 +273,124 @@ router.post("/verify", isLoggedIn, async function (req, res) {
                 message: "Payment is not captured yet"
             });
         }
+        
+        // 7. Update payment, order, and cart atomically.
+        // Razorpay signature and captured status have already been verified.
 
-        // 7. If already paid, don't clear the cart again.
-        if (payment.status === "paid") {
-            if (order.status === "pending") {
-                order.status = "confirmed";
-                await order.save();
-            }
+        const session = await mongoose.startSession();
+
+        try {
+            await session.withTransaction(async function () {
+                // Re-read the payment inside the transaction.
+                const currentPayment = await paymentModel.findOne({
+                    _id: paymentId,
+                    order: orderId,
+                    user: req.user._id,
+                    provider: "razorpay"
+                }).session(session);
+
+                if (!currentPayment) {
+                    throw new Error("Payment record not found");
+                }
+
+                const currentOrder = await orderModel.findOne({
+                    _id: currentPayment.order,
+                    user: req.user._id
+                }).session(session);
+
+                if (!currentOrder) {
+                    throw new Error("Order not found");
+                }
+
+                // If this same payment was already processed,
+                // don't subtract the cart quantities twice.
+                if (currentPayment.status === "paid") {
+                    if (
+                        currentPayment.providerPaymentId !==
+                        razorpay_payment_id
+                    ) {
+                        throw new Error(
+                            "Payment is already associated with another payment ID"
+                        );
+                    }
+
+                    if (currentOrder.status === "pending") {
+                        currentOrder.status = "confirmed";
+                        await currentOrder.save({ session });
+                    }
+
+                    return;
+                }
+
+                // Never reconfirm a cancelled order.
+                if (currentOrder.status === "cancelled") {
+                    throw new Error(
+                        "This order has been cancelled; manual reconciliation is required"
+                    );
+                }
+
+                currentPayment.providerPaymentId =
+                    razorpay_payment_id;
+                currentPayment.status = "paid";
+                currentPayment.method =
+                    razorpayPayment.method || null;
+                currentPayment.failureReason = null;
+
+                await currentPayment.save({ session });
+
+                currentOrder.status = "confirmed";
+                await currentOrder.save({ session });
+
+                const user = await userModel
+                    .findById(req.user._id)
+                    .session(session);
+
+                if (!user) {
+                    throw new Error("User not found");
+                }
+
+                // Remove only the purchased quantities.
+                // Keep any additional quantities added later.
+                for (const orderedItem of currentOrder.items) {
+                    const cartItem = user.cart.find(item =>
+                        item.product &&
+                        item.product.toString() ===
+                        orderedItem.product.toString()
+                    );
+
+                    if (cartItem) {
+                        cartItem.quantity -= orderedItem.quantity;
+                    }
+                }
+
+                user.cart = user.cart.filter(
+                    item => item.quantity > 0
+                );
+
+                await user.save({ session });
+            });
+
             return res.json({
                 success: true,
-                message: "Payment already verified",
-                orderId: order._id
+                message: "Payment verified successfully",
+                orderId: orderId
             });
-        }
 
-        // 8. Record the verified payment.
-        payment.providerPaymentId = razorpay_payment_id;
-        payment.status = "paid";
-        payment.method = razorpayPayment.method || null;
-        payment.failureReason = null;
-
-        await payment.save();
-        order.status = "confirmed";
-        await order.save();
-
-        // 9. Remove the purchased quantities from the cart.
-        // Preserve any extra quantities or products added later.
-        const user = await userModel.findById(req.user._id);
-
-        if (!user) {
-            return res.status(404).json({
-                message: "Payment verified, but user was not found"
-            });
-        }
-
-        for (const orderedItem of order.items) {
-            const cartItem = user.cart.find(
-                item =>
-                    item.product.toString() ===
-                    orderedItem.product.toString()
+        } catch (transactionError) {
+            console.error(
+                "Payment transaction error:",
+                transactionError
             );
 
-            if (cartItem) {
-                cartItem.quantity -= orderedItem.quantity;
-            }
+            return res.status(500).json({
+                message:
+                    "Payment may have succeeded, but order finalization needs attention. Please contact support if this persists."
+            });
+
+        } finally {
+            await session.endSession();
         }
-
-        user.cart = user.cart.filter(item => item.quantity > 0);
-        await user.save();
-
-        return res.json({
-            success: true,
-            message: "Payment verified successfully",
-            orderId: order._id
-        });
-
-    } catch (error) {
+    }catch (error) {
         console.error("Payment verification error:", error);
 
         return res.status(500).json({
